@@ -16,7 +16,6 @@ export const Container = styled.header`
     div {
       display: flex;
       align-items: center;
-      border: solid 1px red;
 
       img {
         width: 3rem;
@@ -25,6 +24,8 @@ export const Container = styled.header`
     }
 
     div:nth-child(1) {
+      padding-left: 1rem;
+
       h1 {
         margin-left: 0.5rem;
       }
@@ -51,6 +52,20 @@ export const Container = styled.header`
       }
     }
     
+    div:nth-child(3) {
+      justify-content: end;
+      padding-right: 1rem;
+
+      div div {
+        flex-direction: column;
+        cursor: pointer;
+      }
+
+      button {
+        border: none;
+        background: transparent;
+      }
+    }
 
   }
 `;

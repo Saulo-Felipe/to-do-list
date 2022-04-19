@@ -45,5 +45,37 @@ export const GlobalCss = createGlobalStyle`
     cursor: not-allowed;
   }
 
+  #root {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(0, 0, 0, 0.6);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 576px;
+    background-color: #fff;
+    padding: 3rem;
+    position: relative;
+    border-radius: 0.25rem;
+  }
+
+  hr {
+    opacity: 0.35;
+  }
   
 `
