@@ -75,7 +75,8 @@ export const GlobalCss = createGlobalStyle`
   }
 
   hr {
-    opacity: 0.35;
+    background-color: #AEAEAE;
+    opacity: 0.55;
   }
   
 `

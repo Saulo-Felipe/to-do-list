@@ -1,11 +1,15 @@
 import { Main } from "./styles";
-import { WithoutChanges } from "../WithoutChanges";
+import { ReactNode } from "react";
 
-export function MainContent() {
+type MainContentProps = {
+  children: ReactNode;
+}
+
+export function MainContent({children}: MainContentProps) {
 
   return (
     <Main>
-      <WithoutChanges />
+      {children}
     </Main>
   );
 }
