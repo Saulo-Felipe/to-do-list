@@ -25,7 +25,6 @@ export const CategoriesContent = styled.section`
   padding: 2rem 0 0 0;
 `;
 
-
 export const WithoutCategories = styled.section`
   /* border: solid 1px red; */
   
@@ -76,43 +75,4 @@ export const WithoutCategories = styled.section`
       box-shadow: 0 0 15px rgb(0, 0, 0, 0.5);
     }
   }
-`;
-
-export const CategoryModalForm = styled.section`
-
-  div:nth-child(1) {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.4rem;
-      
-    img {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
-    }
-
-    h1 {
-      font-size: 1.6rem;
-    }
-  }
-
-  div:nth-child(2) {
-    margin-bottom: 1.4rem;
-
-    input[type="text"] {
-      border: solid 1px #b9b9b9; 
-      width: 100%;
-      height: 3rem;
-      padding-left: 0.75rem;
-      font-size: 1rem;
-    }
-  }
-
-  div:nth-child(3) {
-    
-  }
-
-`;
-
-export const RoundColorPicker = styled.div`
 `;

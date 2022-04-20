@@ -72,6 +72,14 @@ export const GlobalCss = createGlobalStyle`
     padding: 3rem;
     position: relative;
     border-radius: 0.25rem;
+
+    > .close-modal-icon {
+      width: 1.5rem;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      cursor: pointer;
+    }
   }
 
   hr {
