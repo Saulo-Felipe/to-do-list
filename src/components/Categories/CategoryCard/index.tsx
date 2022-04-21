@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Container } from "./styles";
 import { Emoji } from "emoji-mart";
 
-import Options from "../../../assets/options.svg"
+import Config from "../../../assets/settings.png";
+
 
 type CategoryCardProps = {
   data: {
@@ -13,17 +15,36 @@ type CategoryCardProps = {
 }
 
 export function CategoryCard({ data }: CategoryCardProps) {
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
 
+  function toggleDropdown() {
+    if (dropdownIsOpen)
+      setDropdownIsOpen(false);
+    else 
+      setDropdownIsOpen(true);
+  }
+
+  function mouseLeave() {
+    if (dropdownIsOpen)
+      setDropdownIsOpen(false);    
+  }
+  
   return (
-    <Container style={{ backgroundColor: data.bgColor }}>
+    <Container style={{ backgroundColor: data.bgColor }} onMouseLeave={mouseLeave}>
       <header>
         <Emoji emoji={data.emojiID} set='facebook' size={64} />
 
-        <img src={Options} alt="Configurações da categoria" />
+        <div>
+          <img src={Config} alt="Configurações da categoria" onClick={toggleDropdown}/>
+          <div className="dropdown-category-options" style={{ display: dropdownIsOpen ? "block" : "none" }}>
+            <div><i className="fa-solid fa-pen-to-square"></i> Editar</div>
+            <div><i className="fa-solid fa-trash-can"></i> Deletar</div>
+          </div>
+        </div>
       </header>
 
       <section style={{ color: data.textColor }}>
-        {data.content}
+        {data.content.length === 0 ? "Título da categoria" : data.content}
       </section>
     </Container>
   );

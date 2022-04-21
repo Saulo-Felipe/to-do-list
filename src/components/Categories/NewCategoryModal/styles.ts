@@ -73,25 +73,27 @@ export const CategoryModalForm = styled.section`
   }
 
   .select-emoji {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    
-    background-color: rgb(0, 0, 0, 0.05);
-    padding: 0.2rem;
-    border-radius: 0.25rem;
-    transition: 200ms;
     position: relative;
 
-    &:hover {
-      background-color: rgb(0, 0, 0, 0.085);
-    }
-
-    label {
-      margin-left: 0.5rem;
+    #icon-container {
+      display: flex;
+      align-items: center;
       cursor: pointer;
-    }
+      
+      background-color: rgb(0, 0, 0, 0.05);
+      padding: 0.2rem;
+      border-radius: 0.25rem;
+      transition: 200ms;
 
+      &:hover {
+        background-color: rgb(0, 0, 0, 0.085);
+      }
+
+      label {
+        margin-left: 0.5rem;
+        cursor: pointer;
+      }
+    }
   }
 `;
 

@@ -23,6 +23,14 @@ export const CategoriesHeader = styled.header`
 
 export const CategoriesContent = styled.section`
   padding: 2rem 0 0 0;
+  /* border: solid 1px red; */
+
+  display: grid;
+  grid-gap: unset;
+  grid-template-columns: repeat(auto-fill, 15rem);
+  /* justify-content: space-between; */
+
+  gap: 2rem;
 `;
 
 export const WithoutCategories = styled.section`

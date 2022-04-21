@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { CategoryCard } from "../CategoryCard";
 import { Emoji, Picker, EmojiData } from "emoji-mart";
+import { useCategories } from "../../../hooks/useCategories";
 
 import MenuCategoryIcon from "../../../assets/app.png";
 import CloseModal from "../../../assets/close.png";
@@ -17,12 +18,8 @@ type NewCategoryModalProps = {
 }
 
 export function NewCategoryModal({state}: NewCategoryModalProps) {
-  const [categoryInfo, setCategoryInfo] = useState({
-    bgColor: "#ffffff",
-    textColor: "#000000",
-    content: "Coloque aqui o nome da categoria",
-    emojiID: "croissant"
-  });
+  const {categoryInfo, setCategoryInfo} = useCategories().newCategoryState;
+  const {createLocalCategory} = useCategories();
 
   const [isFormOk, setIsFormOk] = useState(false);
   const [openEmojis, setOpenEmojis] = useState(false);
@@ -42,8 +39,17 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
 
   function changeEmoji(emoji: EmojiData) {
     setOpenEmojis(false);
-    setCategoryInfo({ ...categoryInfo, emojiID: emoji.id || "warning" })
+    setCategoryInfo({ ...categoryInfo, emojiID: emoji.id || "warning" });
   }
+
+  function addNewCategory() {
+    if (categoryInfo.content?.length === 0) {
+      alert("ERRO! Categoria sem conteúdo, tente novamente.");
+    } else {
+      createLocalCategory(categoryInfo);
+    }
+  }
+
 
   useEffect(() => {
     if (categoryInfo.content.length <= 0 && isFormOk === false)
@@ -80,7 +86,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
             onChange={(e) => changeContent(e.target.value)}
             value={categoryInfo.content}
             type="text"
-            placeholder="Título da categoria" />
+            placeholder="Coloque aqui o nome da categoria" />
         </div>
 
         <div className="modal-configs-inputs">
@@ -92,7 +98,6 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
               <RoundColorPicker>
                 <div>
                   <input
-                    defaultValue={categoryInfo.bgColor}
                     onChange={(e) => changeBgColor(e.target.value)}
                     value={categoryInfo.bgColor}
                     id="bg-color"
@@ -107,7 +112,6 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
               <RoundColorPicker>
                 <div>
                   <input
-                    defaultValue={categoryInfo.textColor}
                     onChange={(e) => changeTxtColor(e.target.value)}
                     value={categoryInfo.textColor}
                     id="txt-color"
@@ -118,15 +122,12 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
                 <label htmlFor="txt-color">Cor da letra</label>
               </RoundColorPicker>
 
-              <div className="select-emoji" /*onClick={() => setOpenEmojis(true)}*/>
-                <Emoji emoji={categoryInfo.emojiID} set='facebook' size={40} />
-
-                {
-                  openEmojis
-                  ? 
+              <div className="select-emoji">
+                { openEmojis ? 
                   <Picker
                     set="facebook"
                     onSelect={(e) => changeEmoji(e)}
+                    
                     showPreview={false}
                     showSkinTones={false}
                     theme={"dark"}
@@ -138,10 +139,14 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
                       minWidth: "300px",
                     }}
                   /> : <></>
-
                 }
+                
+                <div id="icon-container" onClick={() => openEmojis ? setOpenEmojis(false) : setOpenEmojis(true)}>
+                  <Emoji emoji={categoryInfo.emojiID} set="facebook" size={40} />
 
-                <label htmlFor="select-emoji-id">Ícone da categoria</label>
+                  <label htmlFor="select-emoji-id">Ícone da categoria</label>
+                </div>
+
               </div>
             </div>
 
@@ -152,14 +157,10 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
               <CategoryCard data={categoryInfo} />
             </div>
           </div>
-
-          <div>
-
-          </div>
         </div>
 
         <div className="finish-new-category">
-          <button disabled={isFormOk}>Adicionar nova categoria</button>
+          <button disabled={isFormOk} onClick={addNewCategory}>Adicionar nova categoria</button>
         </div>
 
       </CategoryModalForm>

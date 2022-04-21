@@ -4,11 +4,13 @@ import NewAction from "../../assets/newAction.svg";
 import Logo from "../../assets/logo.svg";
 import User from "../../assets/user.svg";
 import Modal from "react-modal";
+import { useCategories } from "../../hooks/useCategories";
 
 Modal.setAppElement("#root");
 
 export function Header() {
   const [loginModalIsOpen, setLoginModalIsOpen] = useState(false);
+  const {setNewCategoryModalIsOpen} = useCategories().modalOpen;
   
 
   function openLoginModal() {
@@ -24,7 +26,7 @@ export function Header() {
         </div>
 
         <div>
-          <button>
+          <button onClick={() => setNewCategoryModalIsOpen(true)}>
             <img src={NewAction} alt="Adicionar nova ação" />
           </button>
         </div>
