@@ -87,4 +87,8 @@ export const GlobalCss = createGlobalStyle`
     opacity: 0.55;
   }
   
+  a {
+    text-decoration: none;
+    color: unset;
+  }
 `

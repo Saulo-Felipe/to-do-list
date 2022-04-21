@@ -42,6 +42,7 @@ export function Categories() {
           allCategories.map((card, index) => {
             return (
               <CategoryCard key={index} data={{
+                categoryID: card.categoryID,
                 bgColor: card.bgColor,
                 textColor: card.textColor,
                 content: card.content,

@@ -18,7 +18,7 @@ type NewCategoryModalProps = {
 }
 
 export function NewCategoryModal({state}: NewCategoryModalProps) {
-  const {categoryInfo, setCategoryInfo} = useCategories().newCategoryState;
+  const {previewNewCategory, setPreviewNewCategory} = useCategories().newCategoryState;
   const {createLocalCategory} = useCategories();
 
   const [isFormOk, setIsFormOk] = useState(false);
@@ -26,37 +26,37 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
 
 
   function changeContent(text: string) {
-    setCategoryInfo({ ...categoryInfo, content: text });
+    setPreviewNewCategory({ ...previewNewCategory, content: text });
   }
 
   function changeBgColor(hexaColor: string) {
-    setCategoryInfo({ ...categoryInfo, bgColor: hexaColor });
+    setPreviewNewCategory({ ...previewNewCategory, bgColor: hexaColor });
   }
 
   function changeTxtColor(hexaColor: string) {
-    setCategoryInfo({ ...categoryInfo, textColor: hexaColor });
+    setPreviewNewCategory({ ...previewNewCategory, textColor: hexaColor });
   }
 
   function changeEmoji(emoji: EmojiData) {
     setOpenEmojis(false);
-    setCategoryInfo({ ...categoryInfo, emojiID: emoji.id || "warning" });
+    setPreviewNewCategory({ ...previewNewCategory, emojiID: emoji.id || "warning" });
   }
 
   function addNewCategory() {
-    if (categoryInfo.content?.length === 0) {
+    if (previewNewCategory.content?.length === 0) {
       alert("ERRO! Categoria sem conteúdo, tente novamente.");
     } else {
-      createLocalCategory(categoryInfo);
+      createLocalCategory(previewNewCategory);
     }
   }
 
 
   useEffect(() => {
-    if (categoryInfo.content.length <= 0 && isFormOk === false)
+    if (previewNewCategory.content.length <= 0 && isFormOk === false)
       setIsFormOk(true);
     else if (isFormOk === true)
       setIsFormOk(false);
-  }, [categoryInfo.content]);
+  }, [previewNewCategory.content]);
 
   return (
     <Modal
@@ -84,7 +84,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
           <input
             onFocus={(e) => e.target.select()}
             onChange={(e) => changeContent(e.target.value)}
-            value={categoryInfo.content}
+            value={previewNewCategory.content}
             type="text"
             placeholder="Coloque aqui o nome da categoria" />
         </div>
@@ -99,7 +99,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
                 <div>
                   <input
                     onChange={(e) => changeBgColor(e.target.value)}
-                    value={categoryInfo.bgColor}
+                    value={previewNewCategory.bgColor}
                     id="bg-color"
                     type="color"
                     alt="selecionar cor do fundo do cartão"
@@ -113,7 +113,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
                 <div>
                   <input
                     onChange={(e) => changeTxtColor(e.target.value)}
-                    value={categoryInfo.textColor}
+                    value={previewNewCategory.textColor}
                     id="txt-color"
                     type="color"
                     alt="selecionar cor da letra do cartão" />
@@ -142,7 +142,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
                 }
                 
                 <div id="icon-container" onClick={() => openEmojis ? setOpenEmojis(false) : setOpenEmojis(true)}>
-                  <Emoji emoji={categoryInfo.emojiID} set="facebook" size={40} />
+                  <Emoji emoji={previewNewCategory.emojiID} set="facebook" size={40} />
 
                   <label htmlFor="select-emoji-id">Ícone da categoria</label>
                 </div>
@@ -154,7 +154,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
 
             <div>
               <h4>Seu cartão de categoria ficará assim: </h4>
-              <CategoryCard data={categoryInfo} />
+              <CategoryCard data={previewNewCategory} />
             </div>
           </div>
         </div>

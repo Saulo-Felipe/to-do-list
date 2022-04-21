@@ -1,10 +1,13 @@
 import { createContext, ReactNode, useContext, useState } from "react";
+import { v4 as uuid } from "uuid";
+
 
 type CategoriesProviderProps = {
   children: ReactNode;
 }
 
-type CategoryInfo = {
+export type CategoryInfo = {
+  categoryID: string;
   emojiID: string;
   content: string;
   bgColor: string;
@@ -13,8 +16,8 @@ type CategoryInfo = {
 
 type UseCategoriesType = {
   newCategoryState: {
-    categoryInfo: CategoryInfo;
-    setCategoryInfo: (data: CategoryInfo) => void;
+    previewNewCategory: CategoryInfo;
+    setPreviewNewCategory: (data: CategoryInfo) => void;
   },
   modalOpen: {
     newCategoryModalIsOpen: boolean;
@@ -30,7 +33,8 @@ type UseCategoriesType = {
 const CategoriesContext = createContext({} as UseCategoriesType);
 
 export function CategoriesProvider({ children }: CategoriesProviderProps) {
-  const [categoryInfo, setCategoryInfo] = useState({
+  const [previewNewCategory, setPreviewNewCategory] = useState({
+    categoryID: "",
     bgColor: "#ffffff",
     textColor: "#000000",
     content: "",
@@ -50,13 +54,14 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     try {
       let currentData = JSON.parse(localStorage.getItem("@to-do-list") || "[]");
 
-      currentData.push(data);
+      currentData.push({...data, categoryID: uuid()});
 
       localStorage.setItem("@to-do-list", JSON.stringify(currentData));
 
       setAllCategories(currentData);
 
-      setCategoryInfo({
+      setPreviewNewCategory({
+        categoryID: "",
         bgColor: "#ffffff",
         textColor: "#000000",
         content: "",
@@ -72,14 +77,13 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     }
   }
 
-
   return (
     <CategoriesContext.Provider value={{
-      newCategoryState: {categoryInfo, setCategoryInfo},
+      newCategoryState: {previewNewCategory, setPreviewNewCategory},
       modalOpen: { newCategoryModalIsOpen, setNewCategoryModalIsOpen },
       createLocalCategory,
       allCategories,
-      refreshLocalCategory
+      refreshLocalCategory,
     }}>
       { children }
     </CategoriesContext.Provider>
