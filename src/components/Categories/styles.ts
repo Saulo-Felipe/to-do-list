@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 
 export const CategoriesHeader = styled.header`
+  padding: 7rem 3rem 0 3rem;
 
   div:nth-child(1) {
     display: flex;
@@ -22,7 +23,7 @@ export const CategoriesHeader = styled.header`
 `;
 
 export const CategoriesContent = styled.section`
-  padding: 2rem 0 0 0;
+  padding: 2rem 3rem 7rem 3rem;;
   /* border: solid 1px red; */
 
   display: grid;

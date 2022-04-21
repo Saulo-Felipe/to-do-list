@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Main = styled.main`
-  padding: 7rem 5rem 7rem 5rem;
-
+  background: white;
+  height: -webkit-fill-available;
+  margin: 0rem 0.5rem;
+  border-radius: 0.5rem;
 `;

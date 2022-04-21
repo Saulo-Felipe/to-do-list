@@ -45,18 +45,18 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
   const [allCategories, setAllCategories] = useState<CategoryInfo[]>([]);
 
   function refreshLocalCategory() {
-    let currentData = JSON.parse(localStorage.getItem("@to-do-list") || "[]");
+    let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
     setAllCategories(currentData);
   }
 
   function createLocalCategory(data: CategoryInfo) {
     try {
-      let currentData = JSON.parse(localStorage.getItem("@to-do-list") || "[]");
+      let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
       currentData.push({...data, categoryID: uuid()});
 
-      localStorage.setItem("@to-do-list", JSON.stringify(currentData));
+      localStorage.setItem("@to-do-list/categories", JSON.stringify(currentData));
 
       setAllCategories(currentData);
 
