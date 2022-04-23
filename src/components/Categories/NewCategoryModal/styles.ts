@@ -61,10 +61,11 @@ export const CategoryModalForm = styled.section`
       border: none;
       background-color: #363676;
       color: white;
-      padding: 1rem 1.5rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 0.25rem;
       font-size: 1rem;
       transition: filter 0.3s;
+      width: 100%;
 
       &:hover {
         filter: brightness(0.8);

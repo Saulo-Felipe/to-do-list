@@ -42,15 +42,21 @@ export const Section = styled.section`
   > div:nth-child(3) {
     display: flex;
     align-items: center;
-    background-color: #c9c9c9;
+    background-color: #e1e1e1;
     margin-bottom: 1rem;
+    transition: all 200ms;
 
     padding: 0.5rem;
 
     border-bottom: solid 1px white;
+
     :hover {
-      background-color: #dfdfdf94;
+      background-color: #b9b9b993;
     }
+    :hover input {
+      background-color: #d9d9d9;
+    }
+    
     > label:nth-child(1) {
       background-color: white;
       border-radius: 50%;
@@ -79,7 +85,7 @@ export const Section = styled.section`
 
         font-size: 1rem;
 
-        background-color: #f7f7f795;
+        background-color: #e1e1e1;
         cursor: default;
 
         :focus {
@@ -87,7 +93,7 @@ export const Section = styled.section`
           outline: none;
           cursor: text;
 
-          background-color: white;
+          background-color: #f7f7f7;
         }
       }
     }

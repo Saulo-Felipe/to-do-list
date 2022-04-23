@@ -1,71 +1,63 @@
 import styled from "styled-components";
 
+
 export const Container = styled.header`
-  height: 5rem;
-  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2D2E3D;
 
-  section {
-    background: #fff;
-    height: 100%;
-    border-radius: 0.75rem;
+  padding: 1rem;
+  position: relative;
 
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 1rem;
+  > div:nth-child(1) {
+    display: flex;
+    align-items: end;
 
-    div {
-      display: flex;
-      align-items: center;
+    > h1 {
+      color: white;
+      margin-left: 0.75rem;
 
-      img {
-        width: 3rem;
-        height: 3rem;
-      }
     }
+  }
 
-    div:nth-child(1) {
-      padding-left: 1rem;
+  > div:nth-child(2) {
+    position: absolute;
 
-      h1 {
-        margin-left: 0.5rem;
-      }
-    }
+    top: 150%;
+    left: 50%;
+    bottom: 0px;
 
-    div:nth-child(2) {
-      justify-content: center;
-      position: relative;
+    transform: translate(-50%, -100%);
+    background-color: #21222F;
 
-      button {
-        height: 3.7rem;
-        width: 3.7rem;
-        
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
 
-        border-radius: 50%;
-        background: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-        position: absolute;
-        bottom: -50%;
-        border: none;
-      }
-    }
-    
-    div:nth-child(3) {
-      justify-content: end;
-      padding-right: 1rem;
-
-      div div {
-        flex-direction: column;
-        cursor: pointer;
-      }
-
-      button {
-        border: none;
-        background: transparent;
-      }
+    img {
+      width: 40px;
     }
 
   }
+
+  > div:nth-child(3) {
+    display: flex;
+
+    > div:nth-child(1) {
+      text-align: center;
+      color: white;
+      margin-right: 1rem;
+
+      > div:nth-child(1) {
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+
 `;

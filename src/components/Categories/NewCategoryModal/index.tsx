@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
+
 import { CategoryCard } from "../CategoryCard";
 import { Emoji, Picker, EmojiData } from "emoji-mart";
 import { useCategories } from "../../../hooks/useCategories";
 
 import MenuCategoryIcon from "../../../assets/app.png";
-import CloseModal from "../../../assets/close.png";
+import CloseModal from "../../../assets/close.svg";
 import { CategoryModalForm, RoundColorPicker } from "./styles";
+import "emoji-mart/css/emoji-mart.css";
 
+Modal.setAppElement("#root");
 
-
-type NewCategoryModalProps = {
-  state: {
-    newCategoryModalIsOpen: boolean;
-    setNewCategoryModalIsOpen: (value: boolean) => void;
-  }
-}
-
-export function NewCategoryModal({state}: NewCategoryModalProps) {
+export function NewCategoryModal() {
   const {previewNewCategory, setPreviewNewCategory} = useCategories().newCategoryState;
   const {createLocalCategory} = useCategories();
+  const { newCategoryModalIsOpen, setNewCategoryModalIsOpen } = useCategories().modalOpen;
 
   const [isFormOk, setIsFormOk] = useState(false);
   const [openEmojis, setOpenEmojis] = useState(false);
@@ -60,14 +56,14 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
 
   return (
     <Modal
-      isOpen={state.newCategoryModalIsOpen}
-      onRequestClose={() => state.setNewCategoryModalIsOpen(false)}
+      isOpen={newCategoryModalIsOpen}
+      onRequestClose={() => setNewCategoryModalIsOpen(false)}
       overlayClassName={"modal-overlay"}
       className={"modal-content"}
     >
 
       <img
-        onClick={() => state.setNewCategoryModalIsOpen(false)}
+        onClick={() => setNewCategoryModalIsOpen(false)}
         className="close-modal-icon"
         src={CloseModal}
         alt="Fechar modal"
@@ -154,7 +150,7 @@ export function NewCategoryModal({state}: NewCategoryModalProps) {
 
             <div>
               <h4>Seu cartão de categoria ficará assim: </h4>
-              <CategoryCard data={previewNewCategory} />
+              <CategoryCard data={{...previewNewCategory, isModel: true}} />
             </div>
           </div>
         </div>

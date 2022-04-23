@@ -5,7 +5,7 @@ import { Emoji } from "emoji-mart";
 import { CategoryInfo } from "../../hooks/useCategories";
 import { v4 as uuid } from "uuid";
 
-import ArrowBack from "../../assets/arrowBack.svg";
+import ArrowBack from "../../assets/user.svg";
 import TaskIcon from "../../assets/task.svg";
 import Checked from "../../assets/checkbox.svg";
 

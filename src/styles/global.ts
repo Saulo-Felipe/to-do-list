@@ -2,8 +2,8 @@ import { createGlobalStyle } from "styled-components";
 
 export const GlobalCss = createGlobalStyle`
   :root {
-    --background: #F0F0F0;
-    --default-font: 'Assistant', sans-serif;
+    --background: #21222F;
+    --default-font: 'Josefin Slab', serif;
   }
 
   * {
@@ -33,7 +33,7 @@ export const GlobalCss = createGlobalStyle`
   }
   
   h1, h2, h3, h4, h5, h6 strong {
-    font-weight: 600;
+    font-weight: 700;
   }
 
   button {

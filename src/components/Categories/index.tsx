@@ -1,72 +1,45 @@
-import { 
-  CategoriesHeader, 
-  CategoriesContent, 
-  WithoutCategories, 
-} from "./styles";
-
-import { useEffect, useState } from "react";
-import { CategoryCard } from "./CategoryCard";
-import 'emoji-mart/css/emoji-mart.css';
-import { Picker, Emoji } from 'emoji-mart';
-import { NewCategoryModal } from "./NewCategoryModal";
+import { useEffect } from "react";
 import { useCategories } from "../../hooks/useCategories";
+import { CategoryCard } from "./CategoryCard";
 
-import Plane from "../../assets/plane.svg";
-import Folder from "../../assets/folder.svg";
-import OptionsStruct from "../../assets/optionsStruct.svg";
-
+import { Header, Section, Container } from "./styles";
+import ImgFolder from "../../assets/folder.svg";
 
 export function Categories() {
-  const {newCategoryModalIsOpen, setNewCategoryModalIsOpen} = useCategories().modalOpen;
+  const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
   const { allCategories, refreshLocalCategory } = useCategories();
   
   useEffect(() => {
     refreshLocalCategory();
   }, [])
 
-  return (<>{
-    allCategories.length > 0 
-    ? <>
-      <CategoriesHeader>
-        <div>
+  return (
+    <Container>
+      <div>
+        <Header>
           <h1>Categorias</h1>
+          <hr />
+        </Header>
 
-          <img src={OptionsStruct} alt="Estrutura das opções" />
-        </div>
-
-        <hr />
-      </CategoriesHeader>
-
-      <CategoriesContent>
-        {
-          allCategories.map((card, index) => {
-            return (
+        <Section>
+          {
+            allCategories.map((card, index) =>
               <CategoryCard key={index} data={{
+                isModel: false,
                 categoryID: card.categoryID,
                 bgColor: card.bgColor,
                 textColor: card.textColor,
                 content: card.content,
                 emojiID: card.emojiID
               }} />
-            );
-          })
-        }
-      </CategoriesContent>        
-    </>
-    :
-    <WithoutCategories>
-      <div>
-        <img src={Plane} alt="Falta de categorias (icone)" />
-        <h1>Nenhuma categoria adicionada, adicine uma nova!</h1>
+            )
+          }
+
+          <div className="new-category-card" onClick={() => setNewCategoryModalIsOpen(true)}>
+            <img src={ImgFolder} alt="nova categoria "/>
+          </div>
+        </Section>
       </div>
-
-      <div onClick={() => setNewCategoryModalIsOpen(true)}>
-        <img src={Folder} alt="nova categoria "/>
-      </div>
-    </WithoutCategories> 
-  }
-
-  <NewCategoryModal state={{ newCategoryModalIsOpen, setNewCategoryModalIsOpen }} />
-
-  </>);
+    </Container>
+  );
 }

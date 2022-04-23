@@ -1,58 +1,37 @@
-import { useState } from "react";
-import { Container } from "./styles";
-import NewAction from "../../assets/newAction.svg";
-import Logo from "../../assets/logo.svg";
-import User from "../../assets/user.svg";
-import Modal from "react-modal";
 import { useCategories } from "../../hooks/useCategories";
+import { NewCategoryModal } from "../Categories/NewCategoryModal";
 
-Modal.setAppElement("#root");
+import { Container } from "./styles";
+import ImgLogo from "../../assets/logo.svg";
+import ImgNewAction from "../../assets/newAction.svg";
+import ImgUser from "../../assets/user.svg";
+
 
 export function Header() {
-  const [loginModalIsOpen, setLoginModalIsOpen] = useState(false);
-  const {setNewCategoryModalIsOpen} = useCategories().modalOpen;
-  
-
-  function openLoginModal() {
-    setLoginModalIsOpen(true);
-  }
-
+  const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
+ 
   return (
     <Container>
-      <section>
+      <div>
+        <img src={ImgLogo} alt="Logotipo" />
+
+        <h1>To-do List :D</h1>
+      </div>
+
+      <div onClick={() => setNewCategoryModalIsOpen(true)}>
+        <img src={ImgNewAction} alt="nova tarefa ou categoria" />
+      </div>
+
+      <div>        
         <div>
-          <img src={Logo} alt="logotipo react"/>
-          <h1>Todo List </h1>
+          <div>Entrar</div>
+          <div>Salve suas tarefas</div>
         </div>
 
-        <div>
-          <button onClick={() => setNewCategoryModalIsOpen(true)}>
-            <img src={NewAction} alt="Adicionar nova ação" />
-          </button>
-        </div>
+        <img src={ImgUser} alt="Entrar" />
+      </div>
 
-        <div>
-          <div onClick={openLoginModal} >
-            <div>
-              <span>Entrar</span>
-              <small>Salve suas tarefas :)</small>
-            </div>
-
-            <button>
-              <img src={User} alt="reaizar login"/>
-            </button>
-          </div>
-        </div>
-
-        <Modal 
-          isOpen={loginModalIsOpen}
-          onRequestClose={() => setLoginModalIsOpen(false)}
-          overlayClassName={"modal-overlay"}
-          className={"modal-content"}
-        >
-          <h2>Teste de content do modal</h2>
-        </Modal>
-      </section>
+      <NewCategoryModal />
     </Container>
   );
 }

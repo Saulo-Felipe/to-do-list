@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 
 export const Container = styled.div`
-  width: 15rem;
-  height: 15rem;
+  width: 13.5rem;
+  height: 13.5rem;
   background-color: #fff;
   position: relative;
   transition: all 0.5s;
