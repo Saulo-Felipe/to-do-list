@@ -45,13 +45,6 @@ export const GlobalCss = createGlobalStyle`
     cursor: not-allowed;
   }
 
-  #root {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    height: 100vh;
-  }
-
   .modal-overlay {
     position: fixed;
     top: 0;

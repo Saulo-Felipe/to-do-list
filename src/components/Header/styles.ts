@@ -23,10 +23,10 @@ export const Container = styled.header`
 
   > div:nth-child(2) {
     position: absolute;
+    cursor: pointer;
 
     top: 150%;
     left: 50%;
-    bottom: 0px;
 
     transform: translate(-50%, -100%);
     background-color: #21222F;

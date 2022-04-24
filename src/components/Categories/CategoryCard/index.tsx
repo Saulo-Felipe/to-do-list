@@ -44,7 +44,7 @@ export function CategoryCard({ data }: CategoryCardProps) {
     <div onClick={onLinkClick}>
       <Container style={{ backgroundColor: data.bgColor }} onMouseLeave={mouseLeave}>
         <header>
-          <Emoji emoji={data.emojiID} set='facebook' size={64} />
+          <Emoji emoji={data.emojiID} set='facebook' size={52} />
 
           <div>
             <img src={Config} alt="Configurações da categoria" onClick={toggleDropdown}/>

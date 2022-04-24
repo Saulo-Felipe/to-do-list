@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import { Section, Header, Task, NotHaveTasks } from "./styles";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { Emoji } from "emoji-mart";
-import { CategoryInfo } from "../../hooks/useCategories";
+import { Link, useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
-import ArrowBack from "../../assets/user.svg";
-import TaskIcon from "../../assets/task.svg";
-import Checked from "../../assets/checkbox.svg";
+import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details } from "./styles";
+import ImgBack from "../../assets/back.svg";
+import ImgWithoutTask from "../../assets/task.svg";
 
 type Task = {
   taskID: string;
@@ -16,15 +14,23 @@ type Task = {
   categoryID: string;
 }
 
+type AllTasks = {
+  finished: Task[];
+  incomplete: Task[];
+}
+
 export function Tasks() {
-  const [category, setCategory] = useState<CategoryInfo>({
-    bgColor: "white",
+  const [category, setCategory] = useState({
+    bgColor: "#0f3f86",
     categoryID: "loadings",
     content: "loading...",
     emojiID: "warning",
-    textColor: "black",
+    textColor: "white",
   });
-  const [allTasks, setAllTasks] = useState<Task[]>([]);
+  const [allTasks, setAllTasks] = useState<AllTasks>({
+    finished: [],
+    incomplete: []
+  });
   const [newTask, setNewTask] = useState<Task>({
     taskID: "",
     content: "",
@@ -32,14 +38,9 @@ export function Tasks() {
     categoryID: "",
   });
 
-  const params = useParams() || "";
+  const params = useParams();
 
-  useEffect(() => {
-    getLocalCategoryInfo(String(params.categoryID)); // informatons of category
-    refreshLocalTasksState();
-  }, []);
-
-  function getLocalCategoryInfo(categoryID: string) {
+  function getLocalCategoryInfo(categoryID: string) { // FOi
     let data = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]")
 
     for (let c = 0; c < data.length; c++) {
@@ -50,12 +51,19 @@ export function Tasks() {
   }
 
   function refreshLocalTasksState() { // if localstorage change
-    let localData = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
-    let filterTasks = [];
+    let localData: Task[] = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
+    let filterTasks: AllTasks = {
+      finished: [],
+      incomplete: []
+    };
 
     for (let c = 0; c < localData.length; c++) {
       if (localData[c].categoryID === params.categoryID) {
-        filterTasks.push(localData[c]);
+        if (localData[c].finish) {
+          filterTasks.finished.push(localData[c]);
+        } else {
+          filterTasks.incomplete.push(localData[c]);
+        }
       }
     }
 
@@ -65,11 +73,11 @@ export function Tasks() {
   function newLocalTask() {
     let localData: Task[] = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
 
-    localData.push({ 
+    localData.push({
       taskID: uuid(),
-      content: newTask.content, 
-      categoryID: params.categoryID || "", 
-      finish: false 
+      content: newTask.content,
+      categoryID: params.categoryID || "",
+      finish: false
     });
 
     localStorage.setItem("@to-do-list/tasks", JSON.stringify(localData));
@@ -82,7 +90,7 @@ export function Tasks() {
       categoryID: "",
     });
   }
-  
+
   function handleDoneLocalTask(taskID: string) {
     let localData: Task[] = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
 
@@ -95,94 +103,118 @@ export function Tasks() {
     localStorage.setItem("@to-do-list/tasks", JSON.stringify(localData));
     refreshLocalTasksState();
   }
-    
+
   function handleNewTask() {
     if (newTask.content.length > 0) {
       newLocalTask();
     }
   }
 
-
+  useEffect(() => {
+    getLocalCategoryInfo(params.categoryID || "");
+    refreshLocalTasksState();
+  }, [])
 
   return (
-    <>
-      <Header style={{ backgroundColor: category.bgColor, color: category.textColor }}>
+    <Container>
+      <Header bgColor={category.bgColor} textColor={category.textColor}>
         <div>
-          <Link to={"/categories"}>
-            <img src={ArrowBack} alt="Voltar"/>
+          <Link to={"/categories"} >
+            <div>
+              <img src={ImgBack} alt="Voltar" />
+              <h2> Voltar</h2>
+            </div>
           </Link>
-          
-          <div>
-            <Emoji emoji={category.emojiID} set="facebook" size={40} />
-
-            <h1>{category.content}</h1>
-          </div>
         </div>
 
-        <hr />
+        <div>
+          <div>
+            <Emoji emoji={"heavy_plus_sign"} set='facebook' size={40} />
+
+            <h1>Lembretes</h1>
+          </div>
+        </div>
       </Header>
 
       <Section>
-        <h1>Tarefas</h1>
-        <hr />
-        <div>
-          <label onClick={handleNewTask} htmlFor="new-task" style={
-              newTask.content.length > 0
-              ? { backgroundColor: "green", color: "#fff" }
-              : {}
-          }>
-            <i className="fa-solid fa-plus"></i>
-          </label>
+        <CreateNewTask
+          isOk={newTask.content.length !== 0}
+        >
+          <div onClick={handleNewTask}>
+            <i className={"fa-solid fa-plus"} ></i>
+          </div>
 
           <div>
-            <input 
+            <input
+              type="text"
+              placeholder="Adicionar nova tarefa"
               value={newTask.content}
-              onChange={(e) => setNewTask({ ...newTask, content: e.target.value })}
-              id={"new-task"} 
-              type={"text"} 
-              placeholder={"Adicionar nova tarefa"} 
+              onChange={e => setNewTask({ ...newTask, content: e.target.value })}
             />
           </div>
-        </div>
+        </CreateNewTask>
 
         {
-          allTasks.length === 0
-          ?
-            <NotHaveTasks>
-              <img src={TaskIcon} alt="Nenhuma task encontrada" />
+          allTasks.finished.length === 0 && allTasks.incomplete.length === 0
+          ? <WithOutTasks>
+              <img src={ImgWithoutTask} alt="Nenhuma task cadastrada" />
 
-              <h1>Nenhuma tarefa encontrada</h1>
-            </NotHaveTasks>
-          : 
-            allTasks.map((task, index) =>
-              <Task key={index}>
-                <div>
-                  <div 
-                    className={`task-check 
-                    ${task.finish 
-                      ? "task-check-true" 
-                      : "task-check-false"
-                    }`}
-                    onClick={() => handleDoneLocalTask(task.taskID)}
-                    >
-                     
-                    <i className="fa-solid fa-check"></i>
-                  </div>
-
-                  <div
-                    className={task.finish ? "task-txt-true" : "task-txt-false"}
-                  >{task.content}</div>
-                </div>
-
-
-                <div>
-                  <i className="fa-solid fa-pen-to-square"></i>
-                  <i className="fa-solid fa-trash-can"></i>
-                </div>
-              </Task>
-            )
+              <h1>Nenhuma task cadastrada</h1>
+            </WithOutTasks>
+          : <></>
         }
+        {
+          allTasks.incomplete.map(task =>
+            <TaskContainer
+              key={task.taskID}
+              onClick={() => handleDoneLocalTask(task.taskID)}
+              finish={task.finish}
+            >
+              <div>
+                {
+                  task.finish
+                  ? <i className="fa-solid fa-circle-check"></i>
+                  : <i className="fa-solid fa-circle"></i>
+                }
+              </div>
+
+              <div>
+                {task.content}
+              </div>
+            </TaskContainer>
+          )
+        }
+        {
+          allTasks.finished.length > 0
+          ? <Details>
+              <summary>Tarefas Concluídas ({allTasks.finished.length})</summary>
+              {
+                allTasks.finished.map(task =>
+
+                  <TaskContainer
+                    key={task.taskID}
+                    onClick={() => handleDoneLocalTask(task.taskID)}
+                    finish={task.finish}
+                  >
+                    <div>
+                      {
+                        task.finish
+                        ? <i className="fa-solid fa-circle-check"></i>
+                        : <i className="fa-solid fa-circle"></i>
+                      }
+                    </div>
+
+                    <div>
+                      {task.content}
+                    </div>
+                  </TaskContainer>
+                )
+              }
+            </Details>
+          : <></>
+        }
+
       </Section>
-    </>
+    </Container>
   );
 }

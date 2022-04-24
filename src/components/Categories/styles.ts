@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export const Container = styled.main`
   width: 100%;
-  height: 100%;
 
   display: flex;
   align-items: center;
@@ -36,13 +35,17 @@ export const Header = styled.header`
 
 
 export const Section = styled.section`
-  padding: 0 2rem;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: flex-start;
-    column-gap: 1rem;
+  padding: 0 2rem 2rem 2rem;    
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: flex-start;
+
+  column-gap: 1rem;
+  row-gap: 1rem;
+
     
   > div:last-child {
     background-color: #21222F;

@@ -39,6 +39,8 @@ export const Container = styled.div`
     justify-content: space-between;
     align-items: flex-start;
 
+    margin-bottom: 0.5rem;
+
     img {
       padding: 0.4rem 0.8rem 0 0;
       transition: all 0.3s;
@@ -48,10 +50,6 @@ export const Container = styled.div`
       :hover {
         transform: scale(1.1);
       }
-    }
-
-    div:nth-child(1) {
-
     }
 
     .dropdown-category-options {
