@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCategories } from "../../hooks/useCategories";
 import { CategoryCard } from "./CategoryCard";
 
@@ -8,7 +8,8 @@ import ImgFolder from "../../assets/folder.svg";
 export function Categories() {
   const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
   const { allCategories, refreshLocalCategory } = useCategories();
-  
+  const [isEditing, setIsEditing] = useState(false);
+
   useEffect(() => {
     refreshLocalCategory();
   }, [])
@@ -24,14 +25,17 @@ export function Categories() {
         <Section>
           {
             allCategories.map((card, index) =>
-              <CategoryCard key={index} data={{
-                isModel: false,
-                categoryID: card.categoryID,
-                bgColor: card.bgColor,
-                textColor: card.textColor,
-                content: card.content,
-                emojiID: card.emojiID
-              }} />
+              <CategoryCard
+                key={index}
+                data={{
+                  isModel: false,
+                  categoryID: card.categoryID,
+                  bgColor: card.bgColor,
+                  textColor: card.textColor,
+                  content: card.content,
+                  emojiID: card.emojiID
+                }}
+              />
             )
           }
 

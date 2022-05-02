@@ -3,8 +3,6 @@ import { Container } from "./styles";
 import { Emoji } from "emoji-mart";
 import { Link, useNavigate } from "react-router-dom";
 
-import Config from "../../../assets/settings.png";
-
 
 type CategoryCardProps = {
   data: {
@@ -18,41 +16,19 @@ type CategoryCardProps = {
 }
 
 export function CategoryCard({ data }: CategoryCardProps) {
-  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
-
   const Navigate = useNavigate();
-
-  function toggleDropdown() {
-    if (dropdownIsOpen)
-      setDropdownIsOpen(false);
-    else
-      setDropdownIsOpen(true);
-  }
-
-  function mouseLeave() {
-    if (dropdownIsOpen)
-      setDropdownIsOpen(false);
-  }
 
   function onLinkClick() {
     if (!data.isModel) {
-      Navigate(`/${data.categoryID}/tasks`)    
+      Navigate(`/${data.categoryID}/tasks`)
     }
   }
 
   return (
     <div onClick={onLinkClick}>
-      <Container style={{ backgroundColor: data.bgColor }} onMouseLeave={mouseLeave}>
+      <Container style={{ backgroundColor: data.bgColor }}>
         <header>
           <Emoji emoji={data.emojiID} set='facebook' size={52} />
-
-          <div>
-            <img src={Config} alt="Configurações da categoria" onClick={toggleDropdown}/>
-            <div className="dropdown-category-options" style={{ display: dropdownIsOpen ? "block" : "none" }}>
-              <div><i className="fa-solid fa-pen-to-square"></i> Editar</div>
-              <div><i className="fa-solid fa-trash-can"></i> Deletar</div>
-            </div>
-          </div>
         </header>
 
         <section style={{ color: data.textColor }}>

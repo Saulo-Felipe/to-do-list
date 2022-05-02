@@ -41,54 +41,6 @@ export const Container = styled.div`
 
     margin-bottom: 0.5rem;
 
-    img {
-      padding: 0.4rem 0.8rem 0 0;
-      transition: all 0.3s;
-      opacity: 0;
-      width: 3rem;
-
-      :hover {
-        transform: scale(1.1);
-      }
-    }
-
-    .dropdown-category-options {
-      position: absolute;
-      right: 0.8rem;
-      box-shadow: 0 0 20px rgb(0, 0, 0, 0.25);
-      border-radius: 0.25rem;
-      /* border: solid 1px rgb(0, 0, 0, 0.5); */
-      background-color: #fff;
-    
-
-      div:nth-child(1) {
-        :hover {
-          background-color: rgb(0, 0, 255, 0.2);
-        }
-        border-bottom: solid 1px rgb(0, 0, 0, 0.25);
-        
-        i {
-          color: blue;
-        }
-      }
-
-      div:nth-child(2) {
-        :hover {
-          background-color: rgb(255, 0, 0, 0.3);
-        }
-
-        i {
-          color: red;
-        }
-      }
-
-
-      div {
-        padding: 0.25rem 0.75rem;
-        transition: all 200ms;
-      }
-    }
-
   }
 
   section {

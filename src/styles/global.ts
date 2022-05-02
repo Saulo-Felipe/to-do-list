@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 export const GlobalCss = createGlobalStyle`
   :root {
     --background: #21222F;
-    --default-font: 'Josefin Slab', serif;
+    --default-font: 'Quicksand', sans-serif;;
   }
 
   * {
@@ -60,7 +60,7 @@ export const GlobalCss = createGlobalStyle`
 
   .modal-content {
     width: 100%;
-    max-width: 576px;
+    max-width: 586px;
     background-color: #fff;
     padding: 3rem;
     position: relative;

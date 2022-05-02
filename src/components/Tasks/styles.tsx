@@ -12,6 +12,11 @@ type CreateNewTaskProps = {
 
 type TaskContainer = {
   finish: boolean;  
+  isEditing: boolean;
+}
+
+type DropdownProps = {
+  isOpen: boolean;
 }
 
 export const Header = styled.header<HeaderProps>`
@@ -24,7 +29,7 @@ export const Header = styled.header<HeaderProps>`
   margin-top: 0.75rem;
 
   padding: 1rem;
-
+  
   > div:nth-child(1) {
     align-self: self-end;
     
@@ -38,7 +43,7 @@ export const Header = styled.header<HeaderProps>`
       }
 
       h2 {
-        color: white;  
+        color: ${({bgColor}) => bgColor === "#ffffff" ? "black" : "#ffffff"};  
       }
     }
   }
@@ -46,8 +51,11 @@ export const Header = styled.header<HeaderProps>`
   > div:nth-child(2) {
     align-items: end;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
 
-    > div:nth-child(1) {
+    > div:nth-child(2) {
       background-color: rgb(255, 255, 255, .1);
       align-items: end;
       display: flex;
@@ -58,6 +66,11 @@ export const Header = styled.header<HeaderProps>`
       h1 {
         margin-left: 1rem;
         color: ${props => props.textColor ? props.textColor : "#fff"};
+        
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 31ch;
       }
     }
   }
@@ -67,6 +80,27 @@ export const Header = styled.header<HeaderProps>`
 
 export const Section = styled.section`
   padding: 2rem;
+
+  .edit-tasks { 
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      border: none;
+      background-color: blue;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    strong {
+      color: #bd2020;
+    }
+  }
 `;
 
 export const Container = styled.main`
@@ -129,7 +163,6 @@ export const CreateNewTask = styled.div<CreateNewTaskProps>`
 `;
 
 export const TaskContainer = styled.div<TaskContainer>`
-  opacity: ${ ({finish}) => finish ? 0.5 : 1 };
   display: flex;
   background-color: #ffffff0f;
   font-size: 1.4rem;
@@ -140,6 +173,8 @@ export const TaskContainer = styled.div<TaskContainer>`
   margin-bottom: 0.5rem;
 
   transition: all 300ms;
+
+  border: ${({isEditing}) => isEditing ? "solid 1px red" : "none"};
 
   cursor: pointer;
 
@@ -200,4 +235,58 @@ export const Details = styled.details`
     cursor: pointer;
   }
 
+`;
+
+
+export const Dropdown = styled.div<DropdownProps>`
+  cursor: pointer;
+
+  div:nth-child(2) {
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    background-color: #ffffff50;
+    transition: all 300ms;
+  }
+  position: relative;
+  
+  > * {
+    display: ${ ({isOpen}) => isOpen ? "block" : "none" }
+  }
+
+  i {
+    color: #2c2c2c;
+  }
+
+  div:nth-child(1) {
+    position: absolute;
+    right: 0;
+    top: 2rem;
+    width: max-content;
+    box-shadow: 0 0 10px rgb(0, 0, 0, 0.75);
+
+    span {
+      display: block;
+      padding: 0.25rem 0.4rem;
+      background: white;
+      transition: all 250ms;
+      
+      i {
+        color: #bd2020;
+      }
+    }
+
+    span:nth-child(1) {
+      border-bottom: solid 1px rgb(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+    span:hover {
+      filter: brightness(0.8);
+    }
+  }
 `;

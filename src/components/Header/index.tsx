@@ -1,5 +1,7 @@
 import { useCategories } from "../../hooks/useCategories";
 import { NewCategoryModal } from "../Categories/NewCategoryModal";
+import { Register } from "../Register";
+import { useState } from "react";
 
 import { Container } from "./styles";
 import ImgLogo from "../../assets/logo.svg";
@@ -9,7 +11,8 @@ import ImgUser from "../../assets/user.svg";
 
 export function Header() {
   const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
- 
+  const [registerModalIsOpen, setRegisterModalIsOpen] = useState(true);
+
   return (
     <Container>
       <div>
@@ -22,7 +25,7 @@ export function Header() {
         <img src={ImgNewAction} alt="nova tarefa ou categoria" />
       </div>
 
-      <div>        
+      <div onClick={() => setRegisterModalIsOpen(true)}>
         <div>
           <div>Entrar</div>
           <div>Salve suas tarefas</div>
@@ -31,6 +34,7 @@ export function Header() {
         <img src={ImgUser} alt="Entrar" />
       </div>
 
+      <Register isOpen={registerModalIsOpen} setIsOpen={setRegisterModalIsOpen} />
       <NewCategoryModal />
     </Container>
   );

@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { Emoji } from "emoji-mart";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
+import { useCategories } from "../../hooks/useCategories";
 
-import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details } from "./styles";
+import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details, Dropdown } from "./styles";
 import ImgBack from "../../assets/back.svg";
 import ImgWithoutTask from "../../assets/task.svg";
 
-type Task = {
+export type Task = {
   taskID: string;
   content: string;
   finish: boolean;
@@ -38,7 +39,12 @@ export function Tasks() {
     categoryID: "",
   });
 
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { deleteLocalCategory } = useCategories();
   const params = useParams();
+  const Navigate = useNavigate();
 
   function getLocalCategoryInfo(categoryID: string) { // FOi
     let data = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]")
@@ -96,7 +102,13 @@ export function Tasks() {
 
     for (let c = 0; c < localData.length; c++) {
       if (localData[c].taskID === taskID) {
-        localData[c].finish = localData[c].finish ? false : true;
+        if (isEditing) {
+          localData.splice(c, 1);
+
+          if (localData.length === 1) setIsEditing(false);
+        } else {
+          localData[c].finish = localData[c].finish ? false : true;
+        }
       }
     }
 
@@ -108,6 +120,12 @@ export function Tasks() {
     if (newTask.content.length > 0) {
       newLocalTask();
     }
+  }
+  
+  function handleDeleteCategory() {
+    deleteLocalCategory(category.categoryID)
+
+    Navigate("/categories");
   }
 
   useEffect(() => {
@@ -128,15 +146,45 @@ export function Tasks() {
         </div>
 
         <div>
+          <Dropdown isOpen={dropdownIsOpen}>
+            <div>
+              <span onClick={handleDeleteCategory}>
+                <i className="fa-solid fa-trash"></i> Deletar Categoria
+              </span>
+
+              <span 
+                onClick={() => {
+                  setDropdownIsOpen(false);
+                  setIsEditing(true);
+                }}>
+                <i  className="fa-solid fa-trash"></i> Excluir uma tarefa
+              </span>
+            </div>
+
+            <div onClick={() => setDropdownIsOpen(dropdownIsOpen === false)}>
+              <i className="fa-solid fa-gear"></i>
+            </div>
+          </Dropdown>
+
           <div>
             <Emoji emoji={"heavy_plus_sign"} set='facebook' size={40} />
 
-            <h1>Lembretes</h1>
+            <h1>{category.content}</h1>
           </div>
         </div>
       </Header>
 
       <Section>
+        {
+          isEditing
+          ? 
+          <div className="edit-tasks"> 
+            <strong>Clique na categoria que deseja deletar</strong>
+            
+            <button onClick={() => setIsEditing(false)}>Sair do modo edição</button>
+          </div>
+          : <></>
+        }
         <CreateNewTask
           isOk={newTask.content.length !== 0}
         >
@@ -169,13 +217,10 @@ export function Tasks() {
               key={task.taskID}
               onClick={() => handleDoneLocalTask(task.taskID)}
               finish={task.finish}
+              isEditing={isEditing}
             >
               <div>
-                {
-                  task.finish
-                  ? <i className="fa-solid fa-circle-check"></i>
-                  : <i className="fa-solid fa-circle"></i>
-                }
+                <i className="fa-solid fa-circle"></i>
               </div>
 
               <div>
@@ -186,7 +231,7 @@ export function Tasks() {
         }
         {
           allTasks.finished.length > 0
-          ? <Details>
+          ? <Details open>
               <summary>Tarefas Concluídas ({allTasks.finished.length})</summary>
               {
                 allTasks.finished.map(task =>
@@ -195,13 +240,10 @@ export function Tasks() {
                     key={task.taskID}
                     onClick={() => handleDoneLocalTask(task.taskID)}
                     finish={task.finish}
+                    isEditing={isEditing}
                   >
                     <div>
-                      {
-                        task.finish
-                        ? <i className="fa-solid fa-circle-check"></i>
-                        : <i className="fa-solid fa-circle"></i>
-                      }
+                      <i className="fa-solid fa-circle-check"></i>
                     </div>
 
                     <div>

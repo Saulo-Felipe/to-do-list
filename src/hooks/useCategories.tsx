@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { v4 as uuid } from "uuid";
+import { Task } from "../components/Tasks";
 
 
 type CategoriesProviderProps = {
@@ -26,6 +27,7 @@ type UseCategoriesType = {
   createLocalCategory: (data: CategoryInfo) => void;
   allCategories: CategoryInfo[];
   refreshLocalCategory: () => void;
+  deleteLocalCategory: (categoryID: string) => void;
 }
 
 
@@ -77,13 +79,42 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     }
   }
 
+  function deleteLocalCategory(categoryID: string) {
+    try {
+      let categories: CategoryInfo[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+      let tasks: Task[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+
+      for (let c = 0; c < categories.length; c++) {
+        if (categories[c].categoryID === categoryID) {
+          categories.splice(c, 1);
+
+          localStorage.setItem("@to-do-list/categories", JSON.stringify(categories));
+          break;
+        }
+      }
+
+      for (let c = 0; c < tasks.length; c++) {
+        if (tasks[c].categoryID === categoryID) {
+          tasks.splice(c, 1);
+        }
+      }
+
+      localStorage.setItem("@to-do-list/tasks", JSON.stringify(tasks));
+    }
+    catch(e) {
+      alert("Erro ao adicionar categoria. Entre na sua conta e adicione a categoria novamente.")
+      return false;
+    }
+  }
+
   return (
     <CategoriesContext.Provider value={{
       newCategoryState: {previewNewCategory, setPreviewNewCategory},
-      modalOpen: { newCategoryModalIsOpen, setNewCategoryModalIsOpen },
+      modalOpen: {newCategoryModalIsOpen, setNewCategoryModalIsOpen},
       createLocalCategory,
       allCategories,
       refreshLocalCategory,
+      deleteLocalCategory,
     }}>
       { children }
     </CategoriesContext.Provider>

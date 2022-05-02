@@ -17,7 +17,7 @@ export const CategoryModalForm = styled.section`
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
     }
   }
 
@@ -51,6 +51,7 @@ export const CategoryModalForm = styled.section`
 
     h4 {
       margin-bottom: 1rem;
+      font-size: 0.85rem;
     }
   }
 
