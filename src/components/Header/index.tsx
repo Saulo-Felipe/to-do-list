@@ -11,7 +11,7 @@ import ImgUser from "../../assets/user.svg";
 
 export function Header() {
   const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
-  const [registerModalIsOpen, setRegisterModalIsOpen] = useState(true);
+  const [registerModalIsOpen, setRegisterModalIsOpen] = useState(false);
 
   return (
     <Container>

@@ -8,7 +8,6 @@ import { useCategories } from "../../../hooks/useCategories";
 import MenuCategoryIcon from "../../../assets/app.png";
 import CloseModal from "../../../assets/close.svg";
 import { CategoryModalForm, RoundColorPicker } from "./styles";
-import "emoji-mart/css/emoji-mart.css";
 
 Modal.setAppElement("#root");
 

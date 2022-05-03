@@ -5,6 +5,10 @@ import { Tasks } from "./components/Tasks";
 import { CategoriesProvider } from "./hooks/useCategories";
 
 import { GlobalCss } from "./styles/global";
+import "react-toastify/dist/ReactToastify.css";
+import "emoji-mart/css/emoji-mart.css";
+
+
 import { Routes, Route, Link } from "react-router-dom";
 
 
