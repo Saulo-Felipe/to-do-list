@@ -1,6 +1,6 @@
 import ReactModal from "react-modal";
 import { api } from "../../services/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 
 
@@ -28,6 +28,8 @@ export function Register(props: RegisterProps) {
     password2: "",
   })
 
+  const [showPassword, setShowPassword] = useState(false);
+
   async function Register() {
     if (register.name.length <= 2)
       toast.warn("Nome muito curto.");
@@ -43,7 +45,7 @@ export function Register(props: RegisterProps) {
 
     else {
 
-      const id = toast.loading("Please wait...")
+      const id = toast.loading("Aguarde um momento...")
 
       let {data}: RegisterReturn = await api.post("/register", { ...register });
 
@@ -61,74 +63,83 @@ export function Register(props: RegisterProps) {
   } 
 
   return (
-    <>
+    <ReactModal
+      isOpen={props.isOpen}
+      className={"modal-content"}
+      overlayClassName={"modal-overlay"}
+      onRequestClose={() => props.setIsOpen(false)}
+    >
       <ToastContainer />
 
-      <ReactModal
-        isOpen={props.isOpen}
-        className={"modal-content"}
-        overlayClassName={"modal-overlay"}
-        onRequestClose={() => props.setIsOpen(false)}
-      >
-        <img
-          onClick={() => props.setIsOpen(false)}
-          className="close-modal-icon"
-          src={ImgCloseModal}
-          alt="Fechar modal"
-        />
-        <Container>
+      <img
+        onClick={() => props.setIsOpen(false)}
+        className="close-modal-icon"
+        src={ImgCloseModal}
+        alt="Fechar modal"
+      />
 
-          <InputContainer>
-            <label htmlFor="name">Nome completo</label>
-            <input 
-              value={register.name}
-              onChange={(e) => setRegister({ ...register, name: e.target.value })}
-              id="name" 
-              type="text" 
-              placeholder="Seu nome completo"
-            />
-          </InputContainer>
-
-          <InputContainer>
-            <label>Email</label>
-            <input 
-              value={register.email}
-              onChange={(e) => setRegister({ ...register, email: e.target.value })}
-              id="email" 
-              type="email" 
-              placeholder="Endereço de email" 
-            />
-          </InputContainer>
-
-          <InputContainer>
-            <label>Senha</label>
-            <input 
-              value={register.password}
-              onChange={(e) => setRegister({ ...register, password: e.target.value })}
-              id="password" 
-              type="password" 
-              placeholder="Digite uma senha" 
-            />
-          </InputContainer>
+      <h1>Registre-se</h1>
 
 
-          <InputContainer>
-            <label>Digite a senha novamente</label>
-            <input 
-              value={register.password2}
-              onChange={(e) => setRegister({ ...register, password2: e.target.value })}
-              id="password2" 
-              type="password" 
-              placeholder="Para confirmar, digite novamente sua senha" />
-          </InputContainer>
+      <Container>
+
+        <InputContainer>
+          <label htmlFor="name">Nome completo</label>
+          <input 
+            value={register.name}
+            onChange={(e) => setRegister({ ...register, name: e.target.value })}
+            id="name" 
+            type="text" 
+            placeholder="Seu nome completo"
+          />
+        </InputContainer>
+
+        <InputContainer>
+          <label>Email</label>
+          <input 
+            value={register.email}
+            onChange={(e) => setRegister({ ...register, email: e.target.value })}
+            id="email" 
+            type="email" 
+            placeholder="Endereço de email" 
+          />
+        </InputContainer>
+
+        <InputContainer>
+          <label>Senha</label>
+          <input 
+            value={register.password}
+            onChange={(e) => setRegister({ ...register, password: e.target.value })}
+            id="password" 
+            type={showPassword ? "text" : "password"} 
+            placeholder="Digite uma senha" 
+          />
+        </InputContainer>
 
 
-          <Button 
-            onClick={Register}
-          >Cadastre-se</Button>
+        <InputContainer>
+          <label>Digite a senha novamente</label>
+          <input 
+            value={register.password2}
+            onChange={(e) => setRegister({ ...register, password2: e.target.value })}
+            id="password2" 
+            type={showPassword ? "text" : "password"} 
+            placeholder="Para confirmar, digite novamente sua senha" />
+        </InputContainer>
 
-        </Container>
-      </ReactModal>
-    </>
+        <div className="show-password-container">
+          <input 
+            id="show-password" 
+            type="checkbox" 
+            onChange={(e) => setShowPassword(e.target.checked)}
+            checked={showPassword}
+          />
+          <label htmlFor="show-password">Mostrar senha</label>
+        </div>
+
+        <Button onClick={Register} >Cadastre-se</Button>
+
+      </Container>
+    </ReactModal>
   );
 }

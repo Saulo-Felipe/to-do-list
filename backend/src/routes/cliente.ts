@@ -1,16 +1,59 @@
 import express, { Request, Response } from "express";
 import { sequelize } from "../database/database";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
-export const client = express.Router()
-
-
-client.post("/login", (request: Request, response: Response) => {
+export const client = express.Router();
 
 
+type RequestBodyLogin = {
+  email: string;
+  password: string;
+}
 
-  return response.status(200).json({ Ok: true });
-})
+type UserLoginData = [
+  {
+    name: string;
+    email: string;
+    password: string;
+  }
+]
+
+
+client.post("/login", async (request: Request, response: Response) => {
+  try {
+    const { email, password }: RequestBodyLogin = request.body;
+
+    const [user]: UserLoginData[] | any = await sequelize.query(`
+      SELECT * FROM users WHERE "email" = '${email}'
+    `);
+
+    if (user.length == 0) 
+      return response.json({ success: false, message: "Não existe nenhuma conta com este email." })
+    
+    const match = await bcrypt.compare(password, user[0].password);
+
+    if (match) {
+      const token = jwt.sign(
+        { userId: user[0].id }, 
+        process.env.SECRET_TOKEN_KEY,
+        { expiresIn: "730d" }
+      );
+
+      return response.json({ 
+        success: true, 
+        message: "Tudo certo, conectado!", 
+        token 
+      });
+
+    } else
+      return response.json({ success: false, message: "Senha incorreta" });
+  }
+  catch(e) {
+    console.warn("Erro interno!: ", e);
+    return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao entrar." });
+  }
+});
 
 type RequestBodyRegister = {
   name: string;
@@ -56,5 +99,5 @@ client.post("/register", async (request: Request, response: Response) => {
     console.warn("Erro interno!: ", e);
     return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao tentar cadastrar usuário." });
   }
-})
+});
 

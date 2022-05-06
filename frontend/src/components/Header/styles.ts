@@ -46,6 +46,7 @@ export const Container = styled.header`
   }
 
   > div:nth-child(3) {
+    cursor: pointer;
     display: flex;
 
     > div:nth-child(1) {

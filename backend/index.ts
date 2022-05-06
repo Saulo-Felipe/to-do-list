@@ -4,10 +4,19 @@ import cors from "cors";
 
 const app: Express = express();
 
+import "dotenv/config";
+
 // Middlwares
 app.use(cors({
-  origin: "https://3000-saulofelipe-todolist-mubykx0n5jn.ws-us43.gitpod.io"
+  origin: "https://3000-saulofelipe-todolist-mubykx0n5jn.ws-us44.gitpod.io"
 }));
+
+app.use((request: Request, response: Response, next) => {
+  const token = request.headers.token;
+
+  // if (token)
+  next();
+});
 
 app.use(express.json())
 
