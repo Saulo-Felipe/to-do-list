@@ -1,22 +1,18 @@
 import express, { Express, Request, Response } from "express";
-import { client } from "./src/routes/cliente";
+import { withoutAuth } from "./src/routes/withoutAuth";
 import cors from "cors";
+import { MiddlewareAuthentication } from "./src/MiddlewareAuthentication";
 
 const app: Express = express();
 
 import "dotenv/config";
+import { withAuth } from "./src/routes/withAuth";
 
 // Middlwares
 app.use(cors({
-  origin: "https://3000-saulofelipe-todolist-mubykx0n5jn.ws-us44.gitpod.io"
+  origin: process.env.CLIENT_URL
 }));
 
-app.use((request: Request, response: Response, next) => {
-  const token = request.headers.token;
-
-  // if (token)
-  next();
-});
 
 app.use(express.json())
 
@@ -24,6 +20,11 @@ app.get("/", (request: Request, response: Response) => {
   response.send("Hello, world!");
 });
 
-app.use("/", client);
+app.use("/", withoutAuth);
+app.use("/", withAuth);
 
-app.listen(8081, () => console.log("Server is running on port 8081"));
+app.listen(8081, () => {
+    console.clear(); 
+    console.log("Server is running on port 8081");
+  }
+);

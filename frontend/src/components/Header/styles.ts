@@ -45,7 +45,16 @@ export const Container = styled.header`
 
   }
 
-  > div:nth-child(3) {
+
+
+`;
+
+export const ThirdDiv = styled.div`
+  position: relative;
+  user-select: none;
+
+  > div:nth-child(1) {
+
     cursor: pointer;
     display: flex;
 
@@ -59,6 +68,21 @@ export const Container = styled.header`
       }
     }
   }
+`;
 
+export const Dropdown = styled.div`
+  position: absolute;
+  top: 115%;
+  background-color: #14143c;
+  color: white;
+  width: 80%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding-left: 1rem;
 
+  :hover {
+    background-color: #3c1414;
+  }
 `;
