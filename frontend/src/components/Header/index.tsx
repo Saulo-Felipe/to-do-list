@@ -26,6 +26,7 @@ export function Header() {
       setLoginModalIsOpen(true)
     } else {
       setDropdownIsOpen(dropdownIsOpen == false);
+      
     }
   }
 
