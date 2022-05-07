@@ -25,7 +25,7 @@ withoutAuth.post("/login", async (request: Request, response: Response) => {
     const { email, password }: RequestBodyLogin = request.body;
 
     const [user]: UserLoginData[] | any = await sequelize.query(`
-      SELECT * FROM users WHERE "email" = '${email}'
+      SELECT * FROM "User" WHERE email = '${email}'
     `);
 
     if (user.length == 0) 
@@ -34,7 +34,6 @@ withoutAuth.post("/login", async (request: Request, response: Response) => {
     const match = await bcrypt.compare(password, user[0].password);
 
     if (match) {
-      console.log("Coloquei esse id: ", user[0].id)
       const token = jwt.sign(
         { userId: user[0].id }, 
         process.env.SECRET_TOKEN_KEY,
@@ -66,13 +65,15 @@ type RequestBodyRegister = {
 withoutAuth.post("/register", async (request: Request, response: Response) => {
   try {
     const { name, email, password, password2 }: RequestBodyRegister = request.body;
-    console.log("dados: ", request.body)
+
+    console.log("registro dados: ", request.body);
+
     if (name.length <= 2 || email.indexOf("@") === -1 || password.length < 6 || password !== password2) {
       return response.json({ success: false, message: "Dados inválidos." });
     } else {
 
       var [result] = await sequelize.query(`
-        SELECT * FROM users
+        SELECT * FROM "User"
         WHERE email = '${email}'
       `);
 
@@ -82,7 +83,7 @@ withoutAuth.post("/register", async (request: Request, response: Response) => {
           if (err) response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao tentar cadastrar usuário." });
 
           await sequelize.query(`
-            INSERT INTO users (name, email, password)
+            INSERT INTO "User" (name, email, password)
             VALUES
             ('${name}', '${email}', '${hash}')
           `);
