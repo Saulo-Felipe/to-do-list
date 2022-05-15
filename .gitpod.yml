@@ -1,5 +1,5 @@
 tasks:
   - init: |
-      echo 'TODO: build project'
+      cd frontent && yarn
     command: |
       echo 'TODO: start app'
