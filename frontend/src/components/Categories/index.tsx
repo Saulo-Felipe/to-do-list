@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useCategories } from "../../hooks/useCategories";
 import { CategoryCard } from "./CategoryCard";
 
@@ -8,7 +8,6 @@ import ImgFolder from "../../assets/folder.svg";
 export function Categories() {
   const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
   const { allCategories, refreshLocalCategory } = useCategories();
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     refreshLocalCategory();

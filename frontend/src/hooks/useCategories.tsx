@@ -28,6 +28,7 @@ type UseCategoriesType = {
   allCategories: CategoryInfo[];
   refreshLocalCategory: () => void;
   deleteLocalCategory: (categoryID: string) => void;
+  createCategory: (category: CategoryInfo) => void;
 }
 
 
@@ -107,6 +108,10 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     }
   }
 
+  function createCategory(category: CategoryInfo) {
+    console.log("categoria: ", category);
+  }
+
   return (
     <CategoriesContext.Provider value={{
       newCategoryState: {previewNewCategory, setPreviewNewCategory},
@@ -115,6 +120,8 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
       allCategories,
       refreshLocalCategory,
       deleteLocalCategory,
+
+      createCategory,
     }}>
       { children }
     </CategoriesContext.Provider>
