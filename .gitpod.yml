@@ -1,5 +1,21 @@
 tasks:
-  - init: |
-      echo 'TODO: build project'
-    command: |
-      echo 'TODO: start app'
+  - name: client-side
+    init: cd frontend && yarn install && cd ../
+    command: >
+      cd frontend &&
+      yarn start
+
+  - name: server-side
+    init: cd backend && yarn install && cd ../
+    command: >
+      cd backend &&
+      yarn dev
+
+ports:
+  - port: 3000
+    onOpen: notify
+    visibility: public
+
+  - port: 8081
+    onOpen: notify
+    visibility: public

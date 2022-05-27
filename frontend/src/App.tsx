@@ -1,7 +1,7 @@
 import { Header } from "./components/Header";
 import { Categories } from "./components/Categories";
 import { Tasks } from "./components/Tasks";
-
+import { Routes, Route } from "react-router-dom";
 import { CategoriesProvider } from "./hooks/useCategories";
 
 import { GlobalCss } from "./styles/global";
@@ -9,10 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "emoji-mart/css/emoji-mart.css";
 
 
-import { Routes, Route, Link } from "react-router-dom";
-
-
-function App() {
+export default function App() {
   return (
     <>
       <CategoriesProvider>
@@ -31,5 +28,3 @@ function App() {
     </>
   );
 }
-
-export default App;

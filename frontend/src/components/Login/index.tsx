@@ -20,7 +20,7 @@ export function Login(props: LoginProps) {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  function GoToRegisterModal() {
+  function goToRegisterModal() {
     props.setIsOpen(false);
     props.setRegisterModalIsOpen(true);
   }
@@ -110,7 +110,7 @@ export function Login(props: LoginProps) {
         <Button onClick={Login}>Entrar</Button>
 
         <NotHaveAccount>
-          Não tem uma conta? <span onClick={GoToRegisterModal}>Cadastre-se</span>
+          Não tem uma conta? <span onClick={goToRegisterModal}>Cadastre-se</span>
         </NotHaveAccount>
         
       </Container>

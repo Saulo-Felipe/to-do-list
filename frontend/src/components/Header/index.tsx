@@ -13,7 +13,7 @@ import ImgUser from "../../assets/user.svg";
 import { Link } from "react-router-dom";
 
 export function Header() {
-  const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
+  const { setNewCategoryModalIsOpen } = useCategories();
   const [registerModalIsOpen, setRegisterModalIsOpen] = useState(false);
   const [loginModalIsOpen, setLoginModalIsOpen] = useState(false);
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);

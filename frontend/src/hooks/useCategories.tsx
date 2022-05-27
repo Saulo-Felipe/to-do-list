@@ -1,6 +1,9 @@
 import { createContext, ReactNode, useContext, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import { v4 as uuid } from "uuid";
 import { Task } from "../components/Tasks";
+import { api } from "../services/api";
+import { getToken } from "../tools/getToken";
 
 
 type CategoriesProviderProps = {
@@ -16,21 +19,44 @@ export type CategoryInfo = {
 }
 
 type UseCategoriesType = {
-  newCategoryState: {
-    previewNewCategory: CategoryInfo;
-    setPreviewNewCategory: (data: CategoryInfo) => void;
-  },
-  modalOpen: {
-    newCategoryModalIsOpen: boolean;
-    setNewCategoryModalIsOpen: (open: boolean) => void;
-  },
-  createLocalCategory: (data: CategoryInfo) => void;
+  previewNewCategory: CategoryInfo;
+  setPreviewNewCategory: (data: CategoryInfo) => void;
+  newCategoryModalIsOpen: boolean;
+  setNewCategoryModalIsOpen: (open: boolean) => void;
   allCategories: CategoryInfo[];
-  refreshLocalCategory: () => void;
-  deleteLocalCategory: (categoryID: string) => void;
-  createCategory: (category: CategoryInfo) => void;
+  setAllCategories: (args: CategoryInfo[]) => void;
+  tools: () => {
+    createCategory: () => void,
+    refreshCategories: () => void,
+    deleteCategory: (arg: string) => void
+  }
 }
 
+type ServerCategory = {
+  PkUserId: number;
+  backgroundColor: string;
+  contentColor: string;
+  iconId: string;
+  id: number;
+  name: string;
+}
+
+type AllCategories = {
+  data: {
+    success: boolean;
+    error: boolean;
+    message: string;
+    categories: ServerCategory[];
+  }
+}
+
+type DeletedCategoryData = {
+  data: {
+    success: boolean;
+    error: boolean;
+    message: string;
+  }
+}
 
 
 const CategoriesContext = createContext({} as UseCategoriesType);
@@ -47,22 +73,74 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
   const [newCategoryModalIsOpen, setNewCategoryModalIsOpen] = useState(false);
   const [allCategories, setAllCategories] = useState<CategoryInfo[]>([]);
 
-  function refreshLocalCategory() {
+
+  function refreshLocalCategories() {
     let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
     setAllCategories(currentData);
+    console.log("refresh local categories");
   }
 
-  function createLocalCategory(data: CategoryInfo) {
-    try {
-      let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+  function createLocalCategory() {
+    console.log("created local category");
+    
+    let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
-      currentData.push({...data, categoryID: uuid()});
+    currentData.push({...previewNewCategory, categoryID: uuid()});
 
-      localStorage.setItem("@to-do-list/categories", JSON.stringify(currentData));
+    localStorage.setItem("@to-do-list/categories", JSON.stringify(currentData));
 
-      setAllCategories(currentData);
+    setAllCategories(currentData);
 
+    setPreviewNewCategory({
+      categoryID: "",
+      bgColor: "#ffffff",
+      textColor: "#000000",
+      content: "",
+      emojiID: "croissant"
+    })
+    
+    setNewCategoryModalIsOpen(false);
+    refreshLocalCategories();
+  }
+
+  function deleteLocalCategory(categoryID: string) {
+    let categories: CategoryInfo[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+    let tasks: Task[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+
+    for (let c = 0; c < categories.length; c++) {
+      if (categories[c].categoryID === categoryID) {
+        categories.splice(c, 1);
+
+        localStorage.setItem("@to-do-list/categories", JSON.stringify(categories));
+        break;
+      }
+    }
+
+    for (let c = 0; c < tasks.length; c++) {
+      if (tasks[c].categoryID === categoryID) {
+        tasks.splice(c, 1);
+      }
+    }
+
+    localStorage.setItem("@to-do-list/tasks", JSON.stringify(tasks));
+    refreshLocalCategories();
+    console.log("Deletando categoria");
+  }
+
+  async function createCategory() {
+    const id = toast.loading("Aguarde um momento...");
+
+    const {data} = await api.post("/create-category", { ...previewNewCategory });
+
+    toast.update(id, {
+      autoClose: 3000, 
+      render: data.message, 
+      type: data.error ? "error" : data.success ? "success" : "warning", 
+      isLoading: false 
+    });
+
+    if (data.success) {
       setPreviewNewCategory({
         categoryID: "",
         bgColor: "#ffffff",
@@ -71,59 +149,79 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
         emojiID: "croissant"
       })
       setNewCategoryModalIsOpen(false);
-
-      return true;
-    }
-    catch(e) {
-      alert("Erro ao adicionar categoria. Entre na sua conta e adicione a categoria novamente.")
-      return false;
+      refreshCategories();
     }
   }
 
-  function deleteLocalCategory(categoryID: string) {
-    try {
-      let categories: CategoryInfo[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
-      let tasks: Task[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+  async function refreshCategories() {
+    let {data}: AllCategories = await api.post("/get-categories");
 
-      for (let c = 0; c < categories.length; c++) {
-        if (categories[c].categoryID === categoryID) {
-          categories.splice(c, 1);
+    if (!data.success)
+      return toast.error(data.message);
 
-          localStorage.setItem("@to-do-list/categories", JSON.stringify(categories));
-          break;
-        }
+    let newValues: CategoryInfo[] = [];
+    for (var c = 0; c < data.categories.length; c++) {
+      const index = data.categories[c];
+
+      newValues.push({
+        categoryID: String(index.id),
+        bgColor: index.backgroundColor,
+        textColor: index.contentColor,
+        content: index.name,
+        emojiID: index.iconId
+      });
+    }
+
+    setAllCategories(newValues);
+  }
+
+  async function deleteCategory(categoryId: string) {
+    const id = toast.loading("Deletando categoria...");
+
+    const { data }: DeletedCategoryData | any = await api.post("/delete-category", {categoryId})
+
+    toast.update(id, {
+      autoClose: 2000, 
+      render: data.message, 
+      type: data.error ? "error" : data.success ? "success" : "warning", 
+      isLoading: false 
+    });
+
+    refreshCategories();
+  }
+  
+
+  function tools() {
+    if (getToken())
+      return {
+        createCategory,
+        refreshCategories,
+        deleteCategory
       }
-
-      for (let c = 0; c < tasks.length; c++) {
-        if (tasks[c].categoryID === categoryID) {
-          tasks.splice(c, 1);
-        }
+    else
+      return {
+        createCategory: createLocalCategory,
+        refreshCategories: refreshLocalCategories,
+        deleteCategory: deleteLocalCategory,
       }
-
-      localStorage.setItem("@to-do-list/tasks", JSON.stringify(tasks));
-    }
-    catch(e) {
-      alert("Erro ao adicionar categoria. Entre na sua conta e adicione a categoria novamente.")
-      return false;
-    }
   }
 
-  function createCategory(category: CategoryInfo) {
-    console.log("categoria: ", category);
-  }
+
 
   return (
     <CategoriesContext.Provider value={{
-      newCategoryState: {previewNewCategory, setPreviewNewCategory},
-      modalOpen: {newCategoryModalIsOpen, setNewCategoryModalIsOpen},
-      createLocalCategory,
+      previewNewCategory,
+      setPreviewNewCategory,
+      newCategoryModalIsOpen,
+      setNewCategoryModalIsOpen,
       allCategories,
-      refreshLocalCategory,
-      deleteLocalCategory,
-
-      createCategory,
+      setAllCategories,
+      tools
     }}>
-      { children }
+      <>
+        { children }
+        <ToastContainer />
+      </>
     </CategoriesContext.Provider>
   );
 }

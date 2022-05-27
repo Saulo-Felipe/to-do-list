@@ -1,16 +1,20 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useCategories } from "../../hooks/useCategories";
 import { CategoryCard } from "./CategoryCard";
+import { CategoryInfo } from "../../hooks/useCategories";
 
 import { Header, Section, Container } from "./styles";
 import ImgFolder from "../../assets/folder.svg";
 
 export function Categories() {
-  const { setNewCategoryModalIsOpen } = useCategories().modalOpen;
-  const { allCategories, refreshLocalCategory } = useCategories();
+  const { setNewCategoryModalIsOpen, allCategories, tools } = useCategories();
 
   useEffect(() => {
-    refreshLocalCategory();
+    console.log(allCategories);
+  }, [])
+
+  useEffect(() => {
+    tools().refreshCategories();
   }, [])
 
   return (

@@ -8,13 +8,16 @@ import { useCategories } from "../../../hooks/useCategories";
 import MenuCategoryIcon from "../../../assets/app.png";
 import CloseModal from "../../../assets/close.svg";
 import { CategoryModalForm, RoundColorPicker } from "./styles";
+import { getToken } from "../../../tools/getToken";
 
 Modal.setAppElement("#root");
 
 export function NewCategoryModal() {
-  const {previewNewCategory, setPreviewNewCategory} = useCategories().newCategoryState;
-  const {createLocalCategory} = useCategories();
-  const { newCategoryModalIsOpen, setNewCategoryModalIsOpen } = useCategories().modalOpen;
+  const { 
+    previewNewCategory, setPreviewNewCategory,
+    newCategoryModalIsOpen, setNewCategoryModalIsOpen,
+    tools
+  } = useCategories();
 
   const [isFormOk, setIsFormOk] = useState(false);
   const [openEmojis, setOpenEmojis] = useState(false);
@@ -40,9 +43,9 @@ export function NewCategoryModal() {
   function addNewCategory() {
     if (previewNewCategory.content?.length === 0) {
       alert("ERRO! Categoria sem conteúdo, tente novamente.");
-    } else {
-      createLocalCategory(previewNewCategory);
-    }
+    } 
+    else
+      tools().createCategory();
   }
 
 
