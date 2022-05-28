@@ -8,6 +8,12 @@ export const Container = styled.div`
     color: white;
   }
 
+  @media (max-width: 720px) {
+    img {
+      width: 100%;
+    }
+  }
+
   button {
     border: none;
     padding: 0.5rem;
