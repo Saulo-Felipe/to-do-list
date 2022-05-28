@@ -16,7 +16,7 @@ export const Container = styled.header`
 
     > img {
       @media (max-width: 720px) {
-        width: 1rem;
+        width: 1.2rem;
       }
     }
 
@@ -25,7 +25,7 @@ export const Container = styled.header`
       margin-left: 0.75rem;
         
       @media (max-width: 720px) {
-        font-size: 1rem;
+        font-size: 1.2rem;
       }
     }
   }
@@ -64,21 +64,27 @@ export const ThirdDiv = styled.div`
 
     cursor: pointer;
     display: flex;
+    align-items: center;
 
     > div:nth-child(1) {
       text-align: center;
       color: white;
       margin-right: 1rem;
 
+      @media (max-width: 720px) {
+        margin-right: 0.5rem;
+      }
+
       > div:nth-child(1) {
         font-size: 0.75rem;
+
+        @media (max-width: 720px) {
+          display: none;
+        }
       }
 
       > div:nth-child(2) {
         font-size: 1rem;
-      }
-      @media (max-width: 720px) {
-        display: none;
       }
     }
   }
@@ -95,6 +101,7 @@ export const Dropdown = styled.div`
   cursor: pointer;
   transition: all 0.3s;
   padding-left: 1rem;
+  z-index: 99;
 
   :hover {
     background-color: #3c1414;

@@ -1,7 +1,8 @@
 import ReactModal from "react-modal";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Id } from "react-toastify";
 import { api } from "../../services/api";
+import GoogleLogin from "react-google-login";
 
 import { Container, Button, InputContainer, NotHaveAccount } from "../Register/styles";
 import ImgCloseModal from "../../assets/close.svg";
@@ -10,6 +11,9 @@ type LoginProps = {
   isOpen: boolean;
   setIsOpen: (args: boolean) => void;
   setRegisterModalIsOpen: (args: boolean) => void;
+  failureGoogleoAuth: () => void;
+  successGoogleoAuth: (args: any) => void;
+  setNewToken: (id: Id, data: any) => void;
 }
 
 export function Login(props: LoginProps) {
@@ -37,20 +41,7 @@ export function Login(props: LoginProps) {
 
       let {data} = await api.post("/login", { ...login });
 
-      toast.update(id, {
-        autoClose: 3000, 
-        render: data.message, 
-        type: data.error ? "error" : data.success ? "success" : "warning", 
-        isLoading: false 
-      });
-
-      if (data.success) {
-        localStorage.setItem("@to-do-list/user-token", data.token);
-
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
-      }
+      props.setNewToken(id, data);
     }
   }
 
@@ -73,6 +64,14 @@ export function Login(props: LoginProps) {
 
       <h1>Entrar</h1>
 
+      <GoogleLogin 
+        clientId="476588325667-kuibos8rechfr40phhgnt7cpf01ojsqg.apps.googleusercontent.com"
+        buttonText="Entrar com Google"
+        onSuccess={props.successGoogleoAuth}
+        onFailure={props.failureGoogleoAuth}
+        className={"google-button-oauth "}
+      />
+      
       <Container>
 
         <InputContainer>
@@ -82,7 +81,7 @@ export function Login(props: LoginProps) {
             value={login.email}
             onChange={(e) => setLogin({ ...login, email: e.target.value })}
             type="email"
-            placeholder="Digise seu email para entrar"
+            placeholder="Digite seu email para entrar"
           />
         </InputContainer>
 

@@ -31,6 +31,7 @@ export const Header = styled.header<HeaderProps>`
   overflow: hidden;
   padding: 1rem;
   
+  
   > div:nth-child(1) {
     align-self: self-end;
     
@@ -43,10 +44,15 @@ export const Header = styled.header<HeaderProps>`
         margin-right: 0.5rem;
         font-size: 1.5rem;
         color: ${({bgColor}) => bgColor === "#ffffff" ? "black" : "#ffffff"};
+
       }
 
       h2 {
         color: ${({bgColor}) => bgColor === "#ffffff" ? "black" : "#ffffff"};  
+
+        @media (max-width: 720px) {
+          font-size: 0.9rem;
+        }
       }
     }
   }
@@ -55,11 +61,10 @@ export const Header = styled.header<HeaderProps>`
     align-items: end;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    
+    justify-content: space-between;    
 
     > div:nth-child(2) {
-      background-color: rgb(255, 255, 255, .1);
+      background-color: rgb(255, 255, 255, .3);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -76,9 +81,32 @@ export const Header = styled.header<HeaderProps>`
         white-space: nowrap;
         max-width: 31ch;
       }
+
+      @media (max-width: 720px) {
+        justify-content: start;
+        font-size: 0.65rem;
+      }      
     }
   }
 
+  @media (max-width: 720px) {
+    flex-direction: column;
+    > div:nth-child(1) {
+      align-self: normal;
+    }
+    > div:nth-child(2) {
+      width: 100% !important;
+
+      > div:nth-child(1) {
+        position: absolute;
+        top: 1rem;
+      }
+      > div:nth-child(2) {
+        width: 100%;
+      }
+
+    }
+  }
 `;
 
 
@@ -104,6 +132,10 @@ export const Section = styled.section`
     strong {
       color: #bd2020;
     }
+  }
+
+  @media (max-width: 720px) {
+    padding: 0.5rem;
   }
 `;
 
@@ -139,6 +171,10 @@ export const CreateNewTask = styled.div<CreateNewTaskProps>`
 
     margin: 1rem;
     margin-right: 0.5rem;
+
+    @media (max-width: 720px) {
+      margin: 0.5rem;
+    }
   }
 
   > div:nth-child(2) {
@@ -223,6 +259,17 @@ export const WithOutTasks = styled.div`
   img {
     width: 5rem;
     opacity: 0.5;
+  }
+
+
+  @media (max-width: 720px) {
+    flex-direction: column;
+    padding: 3rem 1rem;
+
+    h1 {
+      font-size: 1.4rem;
+      margin-top: 1rem;
+    }
   }
 
 `;

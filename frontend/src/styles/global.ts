@@ -36,6 +36,10 @@ export const GlobalCss = createGlobalStyle`
     font-weight: 700;
   }
 
+  small {
+    font-size: 0.5rem;
+  }
+
   button {
     cursor: pointer;
   }
@@ -58,16 +62,27 @@ export const GlobalCss = createGlobalStyle`
     align-items: center;
     z-index: 99;
 
+    @media (max-width: 720px) {
+      align-items: baseline;
+      padding-top: 0.5rem;
+    }
+
   }
 
   .modal-content {
     width: 100%;
     max-width: 750px;
     background-color: #fff;
-    padding: 3rem;
+    padding: 2rem 3rem;
     position: relative;
     border-radius: 0.25rem;
     z-index: 99;
+   
+    .google-button-oauth {
+      border: solid 1px gray !important ;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
 
     > .close-modal-icon {
       width: 1.5rem;

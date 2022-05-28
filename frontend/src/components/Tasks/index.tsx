@@ -5,9 +5,9 @@ import { v4 as uuid } from "uuid";
 import { api } from "../../services/api";
 import { getToken } from "../../tools/getToken";
 import { toast, ToastContainer } from "react-toastify";
+import { isMobile } from "react-device-detect";
 
 import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details, Dropdown, LoadingContainer } from "./styles";
-import ImgBack from "../../assets/back.svg";
 import ImgWithoutTask from "../../assets/task.svg";
 
 export type Task = {
@@ -68,13 +68,19 @@ export function Tasks() {
   function taskTools() {
     function getLocalCategoryInfo(categoryID: string) {
       let data = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+      let idIsValid: boolean = false;
   
       for (let c = 0; c < data.length; c++) {
         if (data[c].categoryID === categoryID) {
           setCategory(data[c]);
+          idIsValid = true;
           break;
         }
-      }  
+      }
+
+      if (!idIsValid) {
+        Navigate("/categories");
+      }
     }
     async function getCategoryInfo(categoryID: string) {
       var { data }: CategoryInfoData = await api.post("/get-category", { categoryID });
@@ -264,7 +270,7 @@ export function Tasks() {
           </Dropdown>
 
           <div>
-            <Emoji emoji={category.emojiID} set='facebook' size={40} />
+            <Emoji emoji={category.emojiID} set='facebook' size={ isMobile ? 30: 40} />
 
             <h1>{category.content}</h1>
           </div>

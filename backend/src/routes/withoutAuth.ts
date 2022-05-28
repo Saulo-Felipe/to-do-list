@@ -11,14 +11,23 @@ type RequestBodyLogin = {
   password: string;
 }
 
-type UserLoginData = [
-  {
-    name: string;
-    email: string;
-    password: string;
-  }
-]
+type UserLoginData = [{
+  name: string;
+  email: string;
+  password: string;
+}]
 
+type RequestBodyRegister = {
+  name: string;
+  email: string;
+  password: string;
+  password2: string;
+}
+
+type oAuthBodyRequest = {
+  email: string;
+  name: string;
+}
 
 withoutAuth.post("/login", async (request: Request, response: Response) => {
   try {
@@ -55,12 +64,6 @@ withoutAuth.post("/login", async (request: Request, response: Response) => {
   }
 });
 
-type RequestBodyRegister = {
-  name: string;
-  email: string;
-  password: string;
-  password2: string;
-}
 
 withoutAuth.post("/register", async (request: Request, response: Response) => {
   try {
@@ -103,3 +106,43 @@ withoutAuth.post("/register", async (request: Request, response: Response) => {
   }
 });
 
+withoutAuth.post("/authenticate-oAuth", async (request: Request, response: Response) => {
+  try {
+    const { email, name }: oAuthBodyRequest = request.body;
+    let token: string;
+
+    const [user]: UserLoginData[] | any = await sequelize.query(`
+      SELECT id FROM "User" WHERE email = '${email}'
+    `);
+
+    if (user.length == 0) { // Registro
+      await sequelize.query(`
+        INSERT INTO "User" (name, email, password)
+        VALUES
+        ('${name}', '${email}', ' ')
+      `);
+      
+      const [user2]: UserLoginData[] | any = await sequelize.query(`
+        SELECT id FROM "User" WHERE email = '${email}'
+      `);
+
+      token = jwt.sign(
+        { userId: user2[0].id }, 
+        process.env.SECRET_TOKEN_KEY,
+        { expiresIn: "730d" }
+      );
+    } 
+    else
+      token = jwt.sign(
+        { userId: user[0].id }, 
+        process.env.SECRET_TOKEN_KEY,
+        { expiresIn: "730d" }
+      );
+
+    return response.json({ success: true, message: "Tudo certo, conectado!", token });
+  }
+  catch(e) {
+    console.warn("Erro interno!: ", e);
+    return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao entrar." });
+  }
+});

@@ -35,6 +35,7 @@ export function CategoryCard({ data }: CategoryCardProps) {
   }
 
   function deleteCategory() {
+    setDropdownIsOpen(false);
     tools().deleteCategory(data.categoryID);
   }
 
@@ -60,7 +61,7 @@ export function CategoryCard({ data }: CategoryCardProps) {
           <i className="fa-solid fa-ellipsis-vertical" onClick={toggleDropdown}></i>
 
           <Dropdown isOpen={dropdownIsOpen}>
-            <div onClick={deleteCategory}>Deletar categoria <i className="fa-solid fa-trash"></i></div>
+            <div onClick={deleteCategory}><i className="fa-solid fa-trash"></i> Deletar categoria</div>
           </Dropdown>
         </Header>
       }

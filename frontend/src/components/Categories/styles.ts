@@ -25,6 +25,7 @@ export const Container = styled.main`
 export const Header = styled.header`
 
   padding: 2rem;
+  
   h1 {
     color: white;
     margin-bottom: 0.25rem;
@@ -60,6 +61,8 @@ export const Section = styled.section`
 
   @media (max-width: 720px) {
     padding: 0 1rem 1rem 1rem;
+    min-height: -webkit-fill-available;
+    height: fit-content;
   }
     
   > div:last-child {

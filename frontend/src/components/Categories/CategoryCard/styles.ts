@@ -25,14 +25,33 @@ export const Card = styled.div`
     100% { transform: rotate(0deg) };
   }
 
-  @media (max-width: 720px) {
-    width: 100%;
-  }
-
   div:nth-child(1) {
     @media (max-width: 720px) {
       width: 100%;
       height: 10rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    width: 100%;
+
+    .active-category-header {
+      opacity: 1;
+      width: auto;
+      right: 0.5rem;
+      top: 0.5rem;
+      background-color: rgb(0, 0, 0, 0.5);
+      border-radius: 50%;
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: none;
+
+      i {
+        margin: 0;
+      }
     }
   }
 
@@ -129,6 +148,15 @@ export const Dropdown = styled.div<dropdownIsOpen>`
 
     :hover {
       background-color: #dbdbdb;
+
+      i {
+        color: red;
+      }
+    }
+
+    @media (max-width: 720px) {
+      width: max-content !important;
+      height: auto !important;
 
       i {
         color: red;

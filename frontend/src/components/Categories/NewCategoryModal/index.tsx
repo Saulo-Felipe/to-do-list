@@ -151,6 +151,8 @@ export function NewCategoryModal() {
 
                   <label htmlFor="select-emoji-id">Ícone da categoria</label>
                 </div>
+                <small><strong>* Clique para alterar os valores</strong></small>
+
 
               </div>
             </div>

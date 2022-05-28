@@ -1,8 +1,8 @@
 import ReactModal from "react-modal";
 import { api } from "../../services/api";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-
+import { ToastContainer, toast, Id } from "react-toastify";
+import GoogleLogin from "react-google-login";
 
 import { Container, InputContainer, Button } from "./styles";
 import ImgCloseModal from "../../assets/close.svg";
@@ -10,6 +10,10 @@ import ImgCloseModal from "../../assets/close.svg";
 type RegisterProps = {
   isOpen: boolean;
   setIsOpen: (param: boolean) => void;
+  setLoginModalIsOpen: (params: boolean) => void;
+  failureGoogleoAuth: () => void;
+  successGoogleoAuth: (args: any) => void;
+  setNewToken: (id: Id, data: any) => void;
 }
 
 type RegisterReturn = {
@@ -57,8 +61,11 @@ export function Register(props: RegisterProps) {
       });
 
       setTimeout(() => {
-        // Redirect user
-      }, 3000);
+        if (data.success) {
+          props.setIsOpen(false);
+          props.setLoginModalIsOpen(true);
+        }
+      }, 2000);
     }
   } 
 
@@ -79,18 +86,25 @@ export function Register(props: RegisterProps) {
       />
 
       <h1>Registre-se</h1>
-
+      
+      <GoogleLogin 
+        clientId="476588325667-kuibos8rechfr40phhgnt7cpf01ojsqg.apps.googleusercontent.com"
+        buttonText="Entrar com Google"
+        onSuccess={props.successGoogleoAuth}
+        onFailure={props.failureGoogleoAuth}
+        className={"google-button-oauth "}
+      />
 
       <Container>
 
         <InputContainer>
-          <label htmlFor="name">Nome completo</label>
+          <label htmlFor="name">Nome</label>
           <input 
             value={register.name}
             onChange={(e) => setRegister({ ...register, name: e.target.value })}
             id="name" 
             type="text" 
-            placeholder="Seu nome completo"
+            placeholder="Seu nome"
           />
         </InputContainer>
 

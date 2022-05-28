@@ -64,10 +64,10 @@ const CategoriesContext = createContext({} as UseCategoriesType);
 export function CategoriesProvider({ children }: CategoriesProviderProps) {
   const [previewNewCategory, setPreviewNewCategory] = useState({
     categoryID: "",
-    bgColor: "#ffffff",
-    textColor: "#000000",
+    bgColor: "#0045a0",
+    textColor: "#ffffff",
     content: "",
-    emojiID: "croissant"
+    emojiID: "book"
   });
 
   const [newCategoryModalIsOpen, setNewCategoryModalIsOpen] = useState(false);
@@ -112,34 +112,27 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
 
     setPreviewNewCategory({
       categoryID: "",
-      bgColor: "#ffffff",
-      textColor: "#000000",
+      bgColor: "#0045a0",
+      textColor: "#ffffff",
       content: "",
-      emojiID: "croissant"
-    })
+      emojiID: "book"
+    });
     
     setNewCategoryModalIsOpen(false);
     refreshLocalCategories();
   }
   async function createCategory() {
-    const id = toast.loading("Aguarde um momento...");
-
     const {data} = await api.post("/create-category", { ...previewNewCategory });
 
-    toast.update(id, {
-      autoClose: 3000, 
-      render: data.message, 
-      type: data.error ? "error" : data.success ? "success" : "warning", 
-      isLoading: false 
-    });
+    toast.success(data.message, { autoClose: 3000 });
 
     if (data.success) {
       setPreviewNewCategory({
         categoryID: "",
-        bgColor: "#ffffff",
-        textColor: "#000000",
+        bgColor: "#0045a0",
+        textColor: "#ffffff",
         content: "",
-        emojiID: "croissant"
+        emojiID: "book"
       })
       setNewCategoryModalIsOpen(false);
       refreshCategories();
@@ -169,16 +162,12 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     refreshLocalCategories();
   }
   async function deleteCategory(categoryId: string) {
-    let id = toast.loading("Deletando categoria...");
-
     const { data }: DeletedCategoryData | any = await api.post("/delete-category", {categoryId})
 
-    toast.update(id, {
-      autoClose: 2000, 
-      render: data.message, 
-      type: data.error ? "error" : data.success ? "success" : "warning", 
-      isLoading: false 
-    });
+    if (data.error)
+      return toast.error(data.message, { autoClose: 2000 })
+
+    toast.success(data.message, { autoClose: 2000 });
 
     refreshCategories();
   }

@@ -18,6 +18,10 @@ export const CategoryModalForm = styled.section`
 
     h1 {
       font-size: 1.4rem;
+
+      @media (max-width: 720px) {
+        font-size: 1rem;
+      }
     }
   }
 
