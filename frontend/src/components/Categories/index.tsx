@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useCategories } from "../../hooks/useCategories";
 import { CategoryCard } from "./CategoryCard";
-import { CategoryInfo } from "../../hooks/useCategories";
 
 import { Header, Section, Container } from "./styles";
 import ImgFolder from "../../assets/folder.svg";

@@ -12,7 +12,8 @@ import "emoji-mart/css/emoji-mart.css";
 
 
 export default function App() {
-
+  console.log(process.env.NODE_ENV);
+  
   gapi.load("client:auth2", () => {
     gapi.client.init({
       clientId:

@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import { withoutAuth } from "./src/routes/withoutAuth";
 import cors from "cors";
-import { MiddlewareAuthentication } from "./src/MiddlewareAuthentication";
 
 const app: Express = express();
 
@@ -10,13 +9,14 @@ import { withAuth } from "./src/routes/withAuth";
 
 // Middlwares
 app.use(cors({
-  origin: process.env.CLIENT_URL
+  origin: !process.env.NODE_ENV || process.env.NODE_ENV == "development" ? process.env.dev_CLIENT_URL : process.env.prod_CLIENT_URL
 }));
 
 
 app.use(express.json())
 
 app.get("/", (request: Request, response: Response) => {
+  console.log(process.env.NODE_ENV)
   response.send("Hello, world!");
 });
 

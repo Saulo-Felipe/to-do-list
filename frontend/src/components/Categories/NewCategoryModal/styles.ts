@@ -114,6 +114,25 @@ export const CategoryModalForm = styled.section`
   }
 `;
 
+export const RoundColorPickerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+
+  div {
+    margin-top: 0 !important;
+  }
+
+  > div:nth-child(1) {
+    width: 49%;
+  }
+  > div:nth-child(2) {
+    width: 49%;
+  }
+`;
+
 export const RoundColorPicker = styled.div`
   display: flex;
   align-items: center;

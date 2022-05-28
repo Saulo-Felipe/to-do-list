@@ -7,7 +7,7 @@ import { useCategories } from "../../../hooks/useCategories";
 
 import MenuCategoryIcon from "../../../assets/app.png";
 import CloseModal from "../../../assets/close.svg";
-import { CategoryModalForm, RoundColorPicker } from "./styles";
+import { CategoryModalForm, RoundColorPicker, RoundColorPickerContainer } from "./styles";
 
 Modal.setAppElement("#root");
 
@@ -99,33 +99,34 @@ export function NewCategoryModal() {
           <div>
             <div>
               <h4>Configurações do cartão</h4>
+              <RoundColorPickerContainer>
+                <RoundColorPicker>
+                  <div>
+                    <input
+                      onChange={(e) => changeBgColor(e.target.value)}
+                      value={previewNewCategory.bgColor}
+                      id="bg-color"
+                      type="color"
+                      alt="selecionar cor do fundo do cartão"
+                    />
+                  </div>
 
-              <RoundColorPicker>
-                <div>
-                  <input
-                    onChange={(e) => changeBgColor(e.target.value)}
-                    value={previewNewCategory.bgColor}
-                    id="bg-color"
-                    type="color"
-                    alt="selecionar cor do fundo do cartão"
-                  />
-                </div>
+                  <label htmlFor="bg-color">Cor de fundo</label>
+                </RoundColorPicker>
 
-                <label htmlFor="bg-color">Cor de fundo</label>
-              </RoundColorPicker>
+                <RoundColorPicker>
+                  <div>
+                    <input
+                      onChange={(e) => changeTxtColor(e.target.value)}
+                      value={previewNewCategory.textColor}
+                      id="txt-color"
+                      type="color"
+                      alt="selecionar cor da letra do cartão" />
+                  </div>
 
-              <RoundColorPicker>
-                <div>
-                  <input
-                    onChange={(e) => changeTxtColor(e.target.value)}
-                    value={previewNewCategory.textColor}
-                    id="txt-color"
-                    type="color"
-                    alt="selecionar cor da letra do cartão" />
-                </div>
-
-                <label htmlFor="txt-color">Cor da letra</label>
-              </RoundColorPicker>
+                  <label htmlFor="txt-color">Cor da letra</label>
+                </RoundColorPicker>
+              </RoundColorPickerContainer>
 
               <div className="select-emoji">
                 { openEmojis ? 
