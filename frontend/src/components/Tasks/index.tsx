@@ -1,13 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, ReactHTMLElement } from "react";
 import { Emoji } from "emoji-mart";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { v4 as uuid } from "uuid";
-import { useCategories } from "../../hooks/useCategories";
 import { api } from "../../services/api";
 import { getToken } from "../../tools/getToken";
 import { toast, ToastContainer } from "react-toastify";
 
-import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details, Dropdown } from "./styles";
+import { Header, Container, CreateNewTask, TaskContainer, Section, WithOutTasks, Details, Dropdown, LoadingContainer } from "./styles";
 import ImgBack from "../../assets/back.svg";
 import ImgWithoutTask from "../../assets/task.svg";
 
@@ -41,7 +40,7 @@ type CategoryInfoData = {
 
 export function Tasks() {
   const [category, setCategory] = useState({
-    bgColor: "#0f3f86",
+    bgColor: "",
     categoryID: "loadings",
     content: "loading...",
     emojiID: "warning",
@@ -57,6 +56,8 @@ export function Tasks() {
     finished: false,
     categoryID: "",
   });
+  const [newTaskLoading, setNewTaskLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -76,16 +77,7 @@ export function Tasks() {
       }  
     }
     async function getCategoryInfo(categoryID: string) {
-      const id = toast.loading("Carregando dados...");
-  
       var { data }: CategoryInfoData = await api.post("/get-category", { categoryID });
-  
-      toast.update(id, {
-        autoClose: 2000,
-        render: data.message, 
-        type: data.error ? "error" : data.success ? "success" : "warning", 
-        isLoading: false 
-      });
   
       if (data.error)
         Navigate("/categories");
@@ -119,13 +111,11 @@ export function Tasks() {
       setAllTasks(filterTasks);
     }
     async function refreshTasks() {
-      console.log(params)
+      setLoading(true);
       const { data } = await api.post("/get-tasks", {categoryID: Number(params.categoryID)});
-      console.log("refreshed: ", data)
 
       const finished = [];
       const incomplete = [];
-
       for (var c = 0; c < data.tasks.length; c++) {
         if (data.tasks[c].finished) {
           finished.push(data.tasks[c]);
@@ -138,6 +128,7 @@ export function Tasks() {
         finished,
         incomplete
       });
+      setLoading(false);
     }
 
     function createLocalTask() {
@@ -152,7 +143,7 @@ export function Tasks() {
   
       localStorage.setItem("@to-do-list/tasks", JSON.stringify(localData));
   
-      taskTools(). refreshTasks();
+      taskTools().refreshTasks();
       setNewTask({
         id: "",
         content: "",
@@ -161,71 +152,86 @@ export function Tasks() {
       });
     }
     async function createTask() {
+      setNewTaskLoading(true);
       const { data } = await api.post("/create-task", { ...newTask, categoryID: Number(params.categoryID) })
 
-      console.log(data);
+      setNewTask({
+        id: "",
+        content: "",
+        finished: false,
+        categoryID: ""
+      });
+      setNewTaskLoading(false);
+      refreshTasks();
     }
+
+    function doneLocalTask(taskID: string, element: any) {
+      element.style.opacity = "0.5";
+
+      let localData: Task[] = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
+    
+      for (let c = 0; c < localData.length; c++) {
+        if (localData[c].id === taskID) {
+          if (isEditing) {
+            localData.splice(c, 1);
+  
+            if (localData.length === 1) setIsEditing(false);
+          } else {
+            localData[c].finished = localData[c].finished ? false : true;
+          }
+        }
+      }
+  
+      localStorage.setItem("@to-do-list/tasks", JSON.stringify(localData));
+      taskTools().refreshTasks();
+    }
+    async function doneTask(taskID: string, element: any, finished: boolean) {
+      element.style.opacity = "0.5";
+      
+      let {data} = await api.post(`/${isEditing ? "delete" : "done"}-task`, { 
+        taskID: parseInt(taskID) || 0, 
+        categoryID: params.categoryID || 0,
+        finished,
+      });
+  
+      if (data.error)
+        return toast.error(data.message, {
+          autoClose: 2000,
+          closeOnClick: true,
+        });
+      
+      refreshTasks();
+    }
+
 
     if (getToken()) return {
       getCategoryInfo,
       refreshTasks,
-      createTask
+      createTask,
+      doneTask
     }
     else return {
       getCategoryInfo: getLocalCategoryInfo,
       refreshTasks: refreshLocalTasks,
       createTask: createLocalTask,
+      doneTask: doneLocalTask
     } 
   }
-
-
-
-
-
-
   
-  function doneLocalTask(taskID: string) {
-    let localData: Task[] = JSON.parse(localStorage.getItem("@to-do-list/tasks") || "[]");
-  
-    for (let c = 0; c < localData.length; c++) {
-      if (localData[c].id === taskID) {
-        if (isEditing) {
-          localData.splice(c, 1);
-
-          if (localData.length === 1) setIsEditing(false);
-        } else {
-          localData[c].finished = localData[c].finished ? false : true;
-        }
-      }
-    }
-
-    localStorage.setItem("@to-do-list/tasks", JSON.stringify(localData));
-    taskTools().refreshTasks();
-  }
-
-  async function doneTask(taskID: string) {
-    const {data} = await api.post("/delete-task", { taskID });
-
-    console.log("Esta logado, removendo do db")
-  }
-
   function handleNewTask() {
-    if (newTask.content.length > 0) {
+    if (newTask.content.length > 0 && !newTaskLoading) {
       taskTools().createTask();
     }
   }
   
-  function handleDoneTask(taskID: string) {
-    if (getToken())
-      doneTask(taskID);
-    else
-      doneLocalTask(taskID);
+  function handleDoneTask(taskID: string, element: any, finished: boolean) {
+    taskTools().doneTask(taskID, element, finished);
   }
 
   useEffect(() => {
     taskTools().getCategoryInfo(params.categoryID || "");
     taskTools().refreshTasks();
-  }, [])
+  }, []);
 
   return (
     <Container>
@@ -234,7 +240,7 @@ export function Tasks() {
         <div>
           <Link to={"/categories"} >
             <div>
-              <img src={ImgBack} alt="Voltar" />
+              <i className="fa-solid fa-angle-left"></i>
               <h2> Voltar</h2>
             </div>
           </Link>
@@ -263,6 +269,10 @@ export function Tasks() {
             <h1>{category.content}</h1>
           </div>
         </div>
+        
+        {
+          !category.bgColor ? <div className="loading-background"></div> : <></>
+        }
       </Header>
 
       <Section>
@@ -280,7 +290,7 @@ export function Tasks() {
           isOk={newTask.content.length !== 0}
         >
           <div onClick={handleNewTask}>
-            <i className={"fa-solid fa-plus"} ></i>
+            <i className={`fa-solid fa-plus ${newTaskLoading ? "loading-rotate" : ""}`} ></i>
           </div>
 
           <div>
@@ -292,6 +302,15 @@ export function Tasks() {
             />
           </div>
         </CreateNewTask>
+
+        {
+          loading 
+          ?
+            <LoadingContainer>
+              <i className="fa-solid fa-spinner loading-rotate"></i>
+            </LoadingContainer>
+          : <></>
+        }
 
         {
           allTasks.finished.length === 0 && allTasks.incomplete.length === 0
@@ -306,7 +325,7 @@ export function Tasks() {
           allTasks.incomplete.map(task =>
             <TaskContainer
               key={task.id}
-              onClick={() => handleDoneTask(task.id)}
+              onClick={(e) => handleDoneTask(task.id, e.target, task.finished)}
               finish={task.finished}
               isEditing={isEditing}
             >
@@ -329,7 +348,7 @@ export function Tasks() {
 
                   <TaskContainer
                     key={task.id}
-                    onClick={() => handleDoneTask(task.id)}
+                    onClick={(e) => handleDoneTask(task.id, e.target, task.finished)}
                     finish={task.finished}
                     isEditing={isEditing}
                   >

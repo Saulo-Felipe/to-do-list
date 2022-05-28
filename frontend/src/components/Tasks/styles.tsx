@@ -23,11 +23,12 @@ export const Header = styled.header<HeaderProps>`
 
   width: 100%;
   min-height: 15rem;
-  background-color: ${props => props.bgColor ? props.bgColor : "#0f3f86"};
+  background-color: ${props => props.bgColor ? props.bgColor : "#acacac"};
   display: flex;
   justify-content: space-between;
   margin-top: 0.75rem;
-
+  position: relative;
+  overflow: hidden;
   padding: 1rem;
   
   > div:nth-child(1) {
@@ -36,10 +37,12 @@ export const Header = styled.header<HeaderProps>`
     > a div:nth-child(1) {
 
       display: flex;
-      align-items: end;
+      align-items: center;
 
-      img {
-        margin-right: 1rem;
+      i {
+        margin-right: 0.5rem;
+        font-size: 1.5rem;
+        color: ${({bgColor}) => bgColor === "#ffffff" ? "black" : "#ffffff"};
       }
 
       h2 {
@@ -57,8 +60,9 @@ export const Header = styled.header<HeaderProps>`
 
     > div:nth-child(2) {
       background-color: rgb(255, 255, 255, .1);
-      align-items: end;
       display: flex;
+      align-items: center;
+      justify-content: center;
 
       padding: 0.5rem;
       border-radius: 0.5rem;
@@ -119,6 +123,7 @@ export const CreateNewTask = styled.div<CreateNewTaskProps>`
   background: #ffffff0f;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
+
 
   > div:nth-child(1) {
     border-radius: 50%;
@@ -288,5 +293,16 @@ export const Dropdown = styled.div<DropdownProps>`
     span:hover {
       filter: brightness(0.8);
     }
+  }
+`;
+
+export const LoadingContainer = styled.div`
+  text-align: center;
+  margin-bottom: 1rem;
+
+  i {
+    font-size: 2rem;
+    color: white;
+    opacity: 0.75;
   }
 `;

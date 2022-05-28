@@ -25,6 +25,17 @@ export const Card = styled.div`
     100% { transform: rotate(0deg) };
   }
 
+  @media (max-width: 720px) {
+    width: 100%;
+  }
+
+  div:nth-child(1) {
+    @media (max-width: 720px) {
+      width: 100%;
+      height: 10rem;
+    }
+  }
+
 `;
 
 export const Container = styled.div`
@@ -69,6 +80,10 @@ export const Container = styled.div`
     -webkit-line-clamp: 3; /* number of lines to show */
     line-clamp: 3; 
     -webkit-box-orient: vertical;
+
+    @media (max-width: 720px) {
+      font-size: 1.5rem;
+    }
   }
 
 `;

@@ -56,15 +56,18 @@ export const GlobalCss = createGlobalStyle`
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 99;
+
   }
 
   .modal-content {
     width: 100%;
-    max-width: 586px;
+    max-width: 750px;
     background-color: #fff;
     padding: 3rem;
     position: relative;
     border-radius: 0.25rem;
+    z-index: 99;
 
     > .close-modal-icon {
       width: 1.5rem;
@@ -72,6 +75,11 @@ export const GlobalCss = createGlobalStyle`
       right: 1rem;
       top: 1rem;
       cursor: pointer;
+    }
+
+    @media (max-width: 720px) {
+      padding: 1.5rem;
+      width: 95%;
     }
   }
 
@@ -83,5 +91,41 @@ export const GlobalCss = createGlobalStyle`
   a {
     text-decoration: none;
     color: unset;
+  }
+
+  .loading-rotate {
+    animation-name: loadingRotate;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    transition: all 0.5s;
+    cursor: not-allowed;
+  }
+
+  @keyframes loadingRotate {
+    0% { transform: rotate(0deg) }
+    100% { transform: rotate(360deg) }
+  }
+
+  .loading-background {
+    animation-name: loadingBackground;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    transition: all 1s linear;
+    animation-timing-function: linear;
+    position: absolute;
+    height: 120%;
+    width: 10%;
+    transform: rotate(20deg);
+    top: -10%;
+    left: 0;
+    background-image: linear-gradient(90deg, transparent, #ffffff7d, transparent);
+  }
+
+  @keyframes loadingBackground {
+    0% { left: -10% }
+    25% { left: 25% }
+    50% { left: 50% }
+    75% { left: 75% }
+    100% { left: 110% }
   }
 `

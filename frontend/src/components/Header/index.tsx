@@ -55,7 +55,7 @@ export function Header() {
       <div>
         <img src={ImgLogo} alt="Logotipo" />
 
-        <h1><Link to={"/categories"}>To-do List :D</Link></h1>
+        <h2><Link to={"/categories"}>To-do List :D</Link></h2>
       </div>
 
       <div onClick={() => setNewCategoryModalIsOpen(true)}>
@@ -65,8 +65,8 @@ export function Header() {
       <ThirdDiv>
         <div onClick={openLoginModal}>
           <div>
-            <div>{user.name ? user.name : "Entrar"}</div>
             <div>{user.name ? "Seja bem vindo" : "Salve suas tarefas"}</div>
+            <div>{user.name ? user.name : "Entrar"}</div>
           </div>
 
           <img src={ImgUser} alt="Entrar" />

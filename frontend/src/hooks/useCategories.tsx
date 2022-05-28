@@ -78,12 +78,30 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
     setAllCategories(currentData);
-    console.log("refresh local categories");
+  }
+  async function refreshCategories() {
+    let {data}: AllCategories = await api.post("/get-categories");
+
+    if (!data.success)
+      return toast.error(data.message);
+
+    let newValues: CategoryInfo[] = [];
+    for (var c = 0; c < data.categories.length; c++) {
+      const index = data.categories[c];
+
+      newValues.push({
+        categoryID: String(index.id),
+        bgColor: index.backgroundColor,
+        textColor: index.contentColor,
+        content: index.name,
+        emojiID: index.iconId
+      });
+    }
+
+    setAllCategories(newValues);
   }
 
-  function createLocalCategory() {
-    console.log("created local category");
-    
+  function createLocalCategory() {    
     let currentData = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
     currentData.push({...previewNewCategory, categoryID: uuid()});
@@ -103,31 +121,6 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
     setNewCategoryModalIsOpen(false);
     refreshLocalCategories();
   }
-
-  function deleteLocalCategory(categoryID: string) {
-    let categories: CategoryInfo[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
-    let tasks: Task[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
-
-    for (let c = 0; c < categories.length; c++) {
-      if (categories[c].categoryID === categoryID) {
-        categories.splice(c, 1);
-
-        localStorage.setItem("@to-do-list/categories", JSON.stringify(categories));
-        break;
-      }
-    }
-
-    for (let c = 0; c < tasks.length; c++) {
-      if (tasks[c].categoryID === categoryID) {
-        tasks.splice(c, 1);
-      }
-    }
-
-    localStorage.setItem("@to-do-list/tasks", JSON.stringify(tasks));
-    refreshLocalCategories();
-    console.log("Deletando categoria");
-  }
-
   async function createCategory() {
     const id = toast.loading("Aguarde um momento...");
 
@@ -152,31 +145,31 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
       refreshCategories();
     }
   }
+  
+  function deleteLocalCategory(categoryID: string) {
+    let categories: CategoryInfo[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
+    let tasks: Task[] = JSON.parse(localStorage.getItem("@to-do-list/categories") || "[]");
 
-  async function refreshCategories() {
-    let {data}: AllCategories = await api.post("/get-categories");
+    for (let c = 0; c < categories.length; c++) {
+      if (categories[c].categoryID === categoryID) {
+        categories.splice(c, 1);
 
-    if (!data.success)
-      return toast.error(data.message);
-
-    let newValues: CategoryInfo[] = [];
-    for (var c = 0; c < data.categories.length; c++) {
-      const index = data.categories[c];
-
-      newValues.push({
-        categoryID: String(index.id),
-        bgColor: index.backgroundColor,
-        textColor: index.contentColor,
-        content: index.name,
-        emojiID: index.iconId
-      });
+        localStorage.setItem("@to-do-list/categories", JSON.stringify(categories));
+        break;
+      }
     }
 
-    setAllCategories(newValues);
-  }
+    for (let c = 0; c < tasks.length; c++) {
+      if (tasks[c].categoryID === categoryID) {
+        tasks.splice(c, 1);
+      }
+    }
 
+    localStorage.setItem("@to-do-list/tasks", JSON.stringify(tasks));
+    refreshLocalCategories();
+  }
   async function deleteCategory(categoryId: string) {
-    const id = toast.loading("Deletando categoria...");
+    let id = toast.loading("Deletando categoria...");
 
     const { data }: DeletedCategoryData | any = await api.post("/delete-category", {categoryId})
 
@@ -189,7 +182,6 @@ export function CategoriesProvider({ children }: CategoriesProviderProps) {
 
     refreshCategories();
   }
-  
 
   function tools() {
     if (getToken())

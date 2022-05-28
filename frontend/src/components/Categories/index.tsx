@@ -10,10 +10,6 @@ export function Categories() {
   const { setNewCategoryModalIsOpen, allCategories, tools } = useCategories();
 
   useEffect(() => {
-    console.log(allCategories);
-  }, [])
-
-  useEffect(() => {
     tools().refreshCategories();
   }, [])
 

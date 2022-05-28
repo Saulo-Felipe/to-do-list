@@ -14,16 +14,26 @@ export const Container = styled.header`
     display: flex;
     align-items: end;
 
-    > h1 {
+    > img {
+      @media (max-width: 720px) {
+        width: 1rem;
+      }
+    }
+
+    > h2 {
       color: white;
       margin-left: 0.75rem;
-
+        
+      @media (max-width: 720px) {
+        font-size: 1rem;
+      }
     }
   }
 
   > div:nth-child(2) {
     position: absolute;
     cursor: pointer;
+    z-index: 1;
 
     top: 150%;
     left: 50%;
@@ -44,9 +54,6 @@ export const Container = styled.header`
     }
 
   }
-
-
-
 `;
 
 export const ThirdDiv = styled.div`
@@ -64,7 +71,14 @@ export const ThirdDiv = styled.div`
       margin-right: 1rem;
 
       > div:nth-child(1) {
-        font-size: 1.25rem;
+        font-size: 0.75rem;
+      }
+
+      > div:nth-child(2) {
+        font-size: 1rem;
+      }
+      @media (max-width: 720px) {
+        display: none;
       }
     }
   }

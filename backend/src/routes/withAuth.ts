@@ -120,6 +120,12 @@ withAuth.post("/delete-category", async (request: Request, response: Response) =
       WHERE id = ${categoryId}
     `);
 
+    await sequelize.query(`
+      DELETE FROM "Tasks" 
+      WHERE "categoryID" = ${categoryId}
+    `);
+  
+
     return response.json({ success: true, error: false, message: "Categoria removida com sucesso!" });
   }
   catch(e) {
@@ -128,6 +134,8 @@ withAuth.post("/delete-category", async (request: Request, response: Response) =
   }
 });
 
+
+
 withAuth.post("/get-tasks", async (request: Request, response: Response) => {
   try {
     const { categoryID } = request.body;
@@ -135,6 +143,7 @@ withAuth.post("/get-tasks", async (request: Request, response: Response) => {
     const [result] = await sequelize.query(`
       SELECT * FROM "Tasks"
       WHERE "categoryID" = ${ categoryID }
+      ORDER BY id DESC
     `);
 
     return response.json({ success: true, error: false, message: "Tasks carregadas com sucesso!", tasks: result });
@@ -165,16 +174,39 @@ withAuth.post("/create-task", async (request: Request, response: Response) => {
 withAuth.post("/delete-task", async (request: Request, response: Response) => {
   try {
 
-    const { taskId } = request.body;
+    const { taskID, categoryID, finished } = request.body;
 
     await sequelize.query(`
-      DELETE FROM 
+      DELETE FROM "Tasks"
+      WHERE id = ${taskID}
+      AND "categoryID" = ${categoryID}
+      AND finished = ${finished}
     `);
 
+    return response.json({ error: false, success: true, message: "task deletada com sucesso!" })
+  }
+  catch(e) {
+    console.warn("Erro interno!: ", e);
+    return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao deletar task." });
+  }
+});
+
+withAuth.post("/done-task", async (request: Request, response: Response) => {
+  try {
+    const { taskID, categoryID, finished } = request.body;
+
+    await sequelize.query(`
+      UPDATE "Tasks" 
+      SET "finished" = ${ finished === false }
+      WHERE id = ${taskID}
+      AND "categoryID" = ${categoryID}
+    `);
+
+    return response.json({ success: true, error: false, message: "task concluída com sucesso!" })
 
   }
   catch(e) {
     console.warn("Erro interno!: ", e);
-    return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao Carregar categoria." });
+    return response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao concluir task." });
   }
 });

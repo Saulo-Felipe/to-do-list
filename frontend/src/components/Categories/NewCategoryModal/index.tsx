@@ -8,7 +8,6 @@ import { useCategories } from "../../../hooks/useCategories";
 import MenuCategoryIcon from "../../../assets/app.png";
 import CloseModal from "../../../assets/close.svg";
 import { CategoryModalForm, RoundColorPicker } from "./styles";
-import { getToken } from "../../../tools/getToken";
 
 Modal.setAppElement("#root");
 
@@ -21,6 +20,7 @@ export function NewCategoryModal() {
 
   const [isFormOk, setIsFormOk] = useState(false);
   const [openEmojis, setOpenEmojis] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
 
   function changeContent(text: string) {
@@ -44,8 +44,15 @@ export function NewCategoryModal() {
     if (previewNewCategory.content?.length === 0) {
       alert("ERRO! Categoria sem conteúdo, tente novamente.");
     } 
-    else
-      tools().createCategory();
+    else {
+      (async() => {
+        setIsLoading(true);
+        setIsFormOk(true);
+        await tools().createCategory();
+        setIsFormOk(false);
+        setIsLoading(false);
+      })();
+    }
   }
 
 
@@ -150,7 +157,7 @@ export function NewCategoryModal() {
 
             <div></div>
 
-            <div>
+            <div className="preview-container">
               <h4>Seu cartão de categoria ficará assim: </h4>
               <CategoryCard data={{...previewNewCategory, isModel: true}} />
             </div>
@@ -158,7 +165,10 @@ export function NewCategoryModal() {
         </div>
 
         <div className="finish-new-category">
-          <button disabled={isFormOk} onClick={addNewCategory}>Adicionar nova categoria</button>
+          <button disabled={isFormOk} onClick={addNewCategory}>
+            Adicionar nova categoria 
+            {isLoading ? <i className="fa-solid fa-spinner loading-rotate"></i> : <></>}
+          </button>
         </div>
 
       </CategoryModalForm>

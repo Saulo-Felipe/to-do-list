@@ -3,6 +3,7 @@ import { Categories } from "./components/Categories";
 import { Tasks } from "./components/Tasks";
 import { Routes, Route } from "react-router-dom";
 import { CategoriesProvider } from "./hooks/useCategories";
+import { NotFound } from "./components/NotFound";
 
 import { GlobalCss } from "./styles/global";
 import "react-toastify/dist/ReactToastify.css";
@@ -20,6 +21,8 @@ export default function App() {
           <Route path="/categories" element={<Categories />}/>
           
           <Route path=":categoryID/tasks" element={<Tasks />} />
+
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
       </CategoriesProvider>

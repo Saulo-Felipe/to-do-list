@@ -47,6 +47,10 @@ export const CategoryModalForm = styled.section`
         width: 1px;
         background: rgb(0, 0, 0, 0.1);
       }
+
+      @media (max-width: 720px) {
+        flex-direction: column;
+      }
     }
 
     h4 {
@@ -95,6 +99,13 @@ export const CategoryModalForm = styled.section`
         margin-left: 0.5rem;
         cursor: pointer;
       }
+      
+    }
+  }
+
+  .preview-container {
+    @media (max-width: 720px) {
+      margin-top: 1rem;
     }
   }
 `;
