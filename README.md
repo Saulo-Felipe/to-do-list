@@ -5,6 +5,7 @@
 ------------------------------------
 ## Índice
 
+* [Preview](#preview)
 * [Sobre](#sobre)
 * [Funcionalidades](#funcionalidades)
 * [Layout](#layout)
@@ -12,7 +13,6 @@
 * [Tecnologias](#tecnologias)
 * [Autor](#autor)
 * [Licença](#licenca)
-* <a href="https://todolist-saulo.herokuapp.com/categories" target="_blank"> 🏪 To-do List com React e Nodejs ---- Concluído ✅ ----</a>
 
 ------------------------------------
 
@@ -22,6 +22,11 @@ To-do list criado com React e Nodejs. Use esse web app para salvar suas tarefas 
 
 ------------------------------------
 
+## 🚀 Preview <a id="preview"></a>
+
+-> https://todolist-frontend-liart.vercel.app/
+
+------------------------------------
 ## ⚙️ Funcionalidades <a id="funcionalidades"></a>
 1. ✅ Categorias com propriedas personalizaveis
 2. ✅ Dinâmico
@@ -34,10 +39,10 @@ To-do list criado com React e Nodejs. Use esse web app para salvar suas tarefas 
 
 ## 🎨 Layout <a id="layout"></a>
 
-<a href="https://todolist-saulo.herokuapp.com/categories"><img src="https://img.shields.io/badge/Site To do List-blue"/></a>
+<a href="https://todolist-frontend-liart.vercel.app/categories"><img src="https://img.shields.io/badge/Site To do List-blue"/></a>
 <img src="https://img.shields.io/badge/Backend-NodeJs-green">
 <img src="https://img.shields.io/badge/Frontend-ReactJS-green">
-<p>*O Layout completo do site está disponível <a href="https://todolist-saulo.herokuapp.com/categories">aqui</a>.</p>
+<p>*O Layout completo do site está disponível <a href="https://todolist-frontend-liart.vercel.app/categories">aqui</a>.</p>
 
 <img src="Github/preview-01.png">
 <img src="Github/preview-02.png">
