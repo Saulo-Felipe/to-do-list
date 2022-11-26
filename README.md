@@ -24,7 +24,7 @@ To-do list criado com React e Nodejs. Use esse web app para salvar suas tarefas 
 
 ## 🚀 Preview <a id="preview"></a>
 
--> https://todolist-frontend-liart.vercel.app/
+-> https://todolist-frontend-liart.vercel.app/categories
 
 ------------------------------------
 ## ⚙️ Funcionalidades <a id="funcionalidades"></a>
