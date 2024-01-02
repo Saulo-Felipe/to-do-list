@@ -65,14 +65,13 @@ export function Header() {
   }
   async function successGoogleoAuth(response: any) {
     const { profileObj }: OauthResponse = response;
-    console.log("Enviando: ", profileObj);
+
     const id = toast.loading("Aguarde um momento...");
         
     const { data } = await api.post("/authenticate-oAuth", { 
       email: profileObj.email,
       name: profileObj.name 
     });
-    console.log("rrecebendo: ", data);
     
     setNewToken(id, data);
   }

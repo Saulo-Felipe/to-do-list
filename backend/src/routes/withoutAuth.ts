@@ -1,7 +1,8 @@
 import { Router, Request, Response } from "express";
-import { sequelize } from "../database/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { prisma } from "../../prisma/prismaClient";
+import { User } from "@prisma/client";
 
 export const withoutAuth = Router();
 
@@ -33,7 +34,7 @@ withoutAuth.post("/login", async (request: Request, response: Response) => {
   try {
     const { email, password }: RequestBodyLogin = request.body;
 
-    const [user]: UserLoginData[] | any = await sequelize.query(`
+    const user: User[] = await prisma.$queryRawUnsafe(`
       SELECT * FROM "User" WHERE email = '${email}'
     `);
 
@@ -69,13 +70,11 @@ withoutAuth.post("/register", async (request: Request, response: Response) => {
   try {
     const { name, email, password, password2 }: RequestBodyRegister = request.body;
 
-    console.log("registro dados: ", request.body);
-
     if (name.length <= 2 || email.indexOf("@") === -1 || password.length < 6 || password !== password2) {
       return response.json({ success: false, message: "Dados inválidos." });
     } else {
 
-      var [result] = await sequelize.query(`
+      var result: User[] = await prisma.$queryRawUnsafe(`
         SELECT * FROM "User"
         WHERE email = '${email}'
       `);
@@ -85,11 +84,13 @@ withoutAuth.post("/register", async (request: Request, response: Response) => {
         bcrypt.hash(password, 10, async (err, hash) => {
           if (err) response.json({ success: false, error: true, message: "Ocorreu um erro desconhecido ao tentar cadastrar usuário." });
 
-          await sequelize.query(`
+          await prisma.$queryRawUnsafe(`
             INSERT INTO "User" (name, email, password)
             VALUES
             ('${name}', '${email}', '${hash}')
           `);
+
+          console.log("woirireire");
 
           return response.json({ success: true, message: "Usuário cadastrado com sucesso!" })
 
@@ -111,18 +112,18 @@ withoutAuth.post("/authenticate-oAuth", async (request: Request, response: Respo
     const { email, name }: oAuthBodyRequest = request.body;
     let token: string;
 
-    const [user]: UserLoginData[] | any = await sequelize.query(`
+    const user: User[] = await prisma.$queryRawUnsafe(`
       SELECT id FROM "User" WHERE email = '${email}'
     `);
 
     if (user.length == 0) { // Registro
-      await sequelize.query(`
+      await prisma.$queryRawUnsafe(`
         INSERT INTO "User" (name, email, password)
         VALUES
         ('${name}', '${email}', ' ')
       `);
       
-      const [user2]: UserLoginData[] | any = await sequelize.query(`
+      const user2: User[] = await prisma.$queryRawUnsafe(`
         SELECT id FROM "User" WHERE email = '${email}'
       `);
 

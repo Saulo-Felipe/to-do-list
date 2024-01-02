@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
-import { sequelize } from "../database/database";
 import { MiddlewareAuthentication } from "../MiddlewareAuthentication";
-import jwt from "jsonwebtoken";
+import { prisma } from "../../prisma/prismaClient";
+import { Categories, Prisma } from "@prisma/client";
 
 export const withAuth = Router();
 
@@ -22,8 +22,8 @@ withAuth.post("/get-user", async (request: Request, response: Response) => {
 
     if (!currentUserId)
       throw "Erro de validação";
-  
-    const [user]: any = await sequelize.query(`
+    
+    const user: any = await prisma.$queryRawUnsafe(`
       SELECT name FROM "User" 
       WHERE id = ${Number(currentUserId)}
     `);
@@ -44,7 +44,7 @@ withAuth.post("/create-category", async (request: Request, response: Response) =
     if (!bgColor || !content || !emojiID || !textColor || !userID)
       throw "Erro de validação";
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       INSERT INTO "Categories" (name, "backgroundColor", "contentColor", "iconId", "PkUserId")
       VALUES
       ('${content}', '${bgColor}', '${textColor}', '${emojiID}', ${userID})
@@ -65,8 +65,7 @@ withAuth.post("/get-categories", async(request: Request, response: Response) => 
     if (!userId)
       throw "Erro de validação";
 
-
-    const [categories] = await sequelize.query(`
+    const categories: Categories[] = await prisma.$queryRawUnsafe(`
       SELECT * FROM "Categories" 
       WHERE "PkUserId" = ${userId}
       ORDER BY id DESC
@@ -93,7 +92,7 @@ withAuth.post("/get-category", async (request: Request, response: Response) => {
     if (!categoryID)
       throw "Erro de validação"
     
-    let [result] = await sequelize.query(`
+    const result: Categories[] = await prisma.$queryRawUnsafe(`
       SELECT * FROM "Categories"
       WHERE id = ${ categoryID }
       AND "PkUserId" = ${ currentUserId }
@@ -115,16 +114,15 @@ withAuth.post("/delete-category", async (request: Request, response: Response) =
   try {
     const { categoryId } = request.body;
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       DELETE FROM "Categories" 
       WHERE id = ${categoryId}
     `);
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       DELETE FROM "Tasks" 
       WHERE "categoryID" = ${categoryId}
-    `);
-  
+    `);  
 
     return response.json({ success: true, error: false, message: "Categoria removida com sucesso!" });
   }
@@ -140,7 +138,7 @@ withAuth.post("/get-tasks", async (request: Request, response: Response) => {
   try {
     const { categoryID } = request.body;
 
-    const [result] = await sequelize.query(`
+    const result = await prisma.$queryRawUnsafe(`
       SELECT * FROM "Tasks"
       WHERE "categoryID" = ${ categoryID }
       ORDER BY id DESC
@@ -158,7 +156,7 @@ withAuth.post("/create-task", async (request: Request, response: Response) => {
   try {
     const { content, categoryID } = request.body;
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       INSERT INTO "Tasks" (content, finished, "categoryID")
       VALUES ('${content}', ${false}, ${categoryID})
     `);
@@ -176,7 +174,7 @@ withAuth.post("/delete-task", async (request: Request, response: Response) => {
 
     const { taskID, categoryID, finished } = request.body;
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       DELETE FROM "Tasks"
       WHERE id = ${taskID}
       AND "categoryID" = ${categoryID}
@@ -195,7 +193,7 @@ withAuth.post("/done-task", async (request: Request, response: Response) => {
   try {
     const { taskID, categoryID, finished } = request.body;
 
-    await sequelize.query(`
+    await prisma.$queryRawUnsafe(`
       UPDATE "Tasks" 
       SET "finished" = ${ finished === false }
       WHERE id = ${taskID}

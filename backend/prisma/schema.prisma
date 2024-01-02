@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Categories {
+  id              Int    @id(map: "categories_pkey") @default(autoincrement())
+  name            String @default("No name") @db.VarChar(250)
+  backgroundColor String @default("#fff") @db.VarChar(100)
+  contentColor    String @default("#000") @db.VarChar(100)
+  iconId          String @default("warning") @db.VarChar(100)
+  PkUserId        Int?
+}
+
+model Tasks {
+  id         Int     @id @default(autoincrement())
+  content    String  @db.VarChar(200)
+  finished   Boolean @default(false)
+  categoryID Int
+}
+
+model User {
+  name     String @db.VarChar(200)
+  email    String @db.VarChar(200)
+  password String @db.VarChar(200)
+  id       Int    @id(map: "users_pkey") @default(autoincrement())
+}
