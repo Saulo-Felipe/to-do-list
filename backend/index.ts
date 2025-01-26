@@ -23,8 +23,8 @@ app.get("/", (request: Request, response: Response) => {
 app.use("/", withoutAuth);
 app.use("/", withAuth);
 
-app.listen(process.env.PORT || 8081, () => {
+app.listen(process.env.PORT || 3003, () => {
     console.clear(); 
-    console.log("Server is running on port 8081");
+    console.log("Server is running on port 3003");
   }
 );

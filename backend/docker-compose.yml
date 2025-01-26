@@ -4,6 +4,7 @@ services:
   to-do-list:
     build: .
     ports:
-      - 3003:8081
+      - 3003:3003
     env_file:
       - .env
+    network_mode: "host"
