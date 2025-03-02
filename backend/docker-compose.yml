@@ -2,9 +2,11 @@ version: "3.8"
 
 services:
   to-do-list:
-    build: .
+    build:
+      context: .
+      network: host
     ports:
       - 3003:3003
     env_file:
       - .env
-    network_mode: "host"
+    network_mode: host
